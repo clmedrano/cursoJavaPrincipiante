@@ -1,23 +1,52 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package Categoria;
 
-/**
- *
- * @author hp
- */
-public class CategoriaForm extends javax.swing.JDialog {
+import javax.swing.JOptionPane;
 
+public class CategoriaForm extends javax.swing.JDialog {
+    // Variables de instancia
+    private Integer id;           // para saber qué registro editar
+    private String nombreIngresado = null;
+    private boolean guardado = false;
+    
     /**
      * Creates new form CategoriaForm
      */
     public CategoriaForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // Posicionar en el centro de lapantalla
+        this.setLocationRelativeTo(this);
+        
+        //System.out.println("NUEVO REGISTROS.....");
+        setTitle("Nuevo registro");
     }
-
+    
+    // Constructor con datos (para edición)
+    public CategoriaForm(java.awt.Frame parent, boolean modal, Integer id, String nombre) {
+        super(parent, modal);
+        initComponents();
+        
+        // Posicionar en el centro de lapantalla
+        this.setLocationRelativeTo(this);
+        
+        // Editar Registro
+        this.id = id;
+        
+        // Cargar el nombre en el campo de texto
+        txtNombre.setText(nombre); // suponiendo que tienes txtNombre
+        setTitle("Editar Categoría");
+    }
+    
+    // Método para obtener el nombre ingresado
+    public String getNombre() {
+        return nombreIngresado;
+    }
+    // Método para saber si se guardó
+    public boolean isGuardado() {
+        return guardado;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,11 +68,19 @@ public class CategoriaForm extends javax.swing.JDialog {
 
         jLabel1.setText("Nombre");
 
-        txtNombre.setText("jTextField1");
-
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,6 +133,26 @@ public class CategoriaForm extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        String nombre = txtNombre.getText().trim();
+        
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
+            txtNombre.requestFocus();
+            return;
+        }
+        
+        this.nombreIngresado = nombre;
+        this.guardado = true;
+        dispose(); // cierra el diálogo        
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // No se guarda
+        this.guardado = false;
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments

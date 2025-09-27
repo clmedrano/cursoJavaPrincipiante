@@ -3,6 +3,7 @@ package Dashboard;
 import Categoria.Categoria;
 import Categoria.Categoria_men;
 import javax.swing.JPanel;
+import util.VistaUtil;
 
 public class Dashboard extends javax.swing.JFrame {
 
@@ -166,9 +167,9 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
         Categoria_men form = new Categoria_men();
-        Categoria obj = new Categoria();
+        VistaUtil vista = new VistaUtil();
         
-        obj.showPanel(form, jpContenedor);
+        vista.showPanel(form, jpContenedor);
         lblTexto.setText("LISTA DE CATEGORÍAS");
     }//GEN-LAST:event_btnCategoriasActionPerformed
 

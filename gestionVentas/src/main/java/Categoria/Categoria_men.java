@@ -1,20 +1,50 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package Categoria;
 
-/**
- *
- * @author hp
- */
-public class Categoria_men extends javax.swing.JPanel {
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+//import Categoria.Categoria;
+//import Categoria.CategoriaDAO;
+import Categoria.Categoria;
+import Categoria.CategoriaDAO;
+import java.awt.Frame;
+import java.awt.Window;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
+public class Categoria_men extends javax.swing.JPanel {
+    private CategoriaDAO categoriaDAO = new CategoriaDAO();
+    
     /**
      * Creates new form CategoriaForm
      */
     public Categoria_men() {
         initComponents();
+        
+        // Cargar datos a la tabla del formulario
+        cargarDatos();
+    }
+    
+    private void cargarDatos() {
+        DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
+        modelo.setRowCount(0);
+        
+        for (Categoria c : categoriaDAO.listar()) { // ← modelo.Categoria
+            modelo.addRow(new Object[]{c.getId(), c.getNombre()});
+        }
+        ajustarAnchoColumnas();
+    }
+    private void ajustarAnchoColumnas() {
+        // Obtener el modelo de columnas
+        TableColumnModel columnModel = jtContenido.getColumnModel();
+
+        // Columna 0: ID → ancho pequeño
+        columnModel.getColumn(0).setPreferredWidth(50);   // ID
+        columnModel.getColumn(0).setMinWidth(50);
+        columnModel.getColumn(0).setMaxWidth(80);
+        
+//        // Columna 1: Nombre → más ancha
+//        columnModel.getColumn(1).setPreferredWidth(200);
+//        columnModel.getColumn(1).setMinWidth(100);
     }
 
     /**
@@ -36,20 +66,43 @@ public class Categoria_men extends javax.swing.JPanel {
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Código", "Nombre"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jtContenido);
 
         btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -95,6 +148,72 @@ public class Categoria_men extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // 1. Obtener ventana padre
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (!(window instanceof Frame)) {
+            JOptionPane.showMessageDialog(this, "No se puede abrir el formulario.");
+            return;
+        }
+        
+        // 2. Crear y mostrar el diálogo
+        CategoriaForm dialog = new CategoriaForm((Frame) window, true);
+        dialog.setVisible(true); // bloquea hasta que se cierre
+        
+        // 3. Después de cerrar, verificar si se guardó
+        if (dialog.isGuardado()) {
+            String nombre = dialog.getNombre();
+
+            // 4. Usar el DAO para insertar
+            if (categoriaDAO.insertar(nombre)) {
+                JOptionPane.showMessageDialog(this, "✅ Categoría agregada con éxito.");
+                cargarDatos(); // refresca el JTable
+            } else {
+                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
+            }
+        }
+        // Si fue cancelado, no hace nada
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // 1. Verificar fila seleccionada
+        int filaSeleccionada = jtContenido.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una categoría para editar.");
+            return;
+        }
+        
+        // 2. Obtener datos
+        Integer id = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
+        String nombre = (String) jtContenido.getValueAt(filaSeleccionada, 1);
+
+        // 3. Obtener ventana padre
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (!(window instanceof Frame)) {
+            JOptionPane.showMessageDialog(this, "No se puede abrir el diálogo.");
+            return;
+        }
+        
+        // 4. Abrir el diálogo en modo edición
+        var dialog = new CategoriaForm((Frame) window, true, id, nombre);
+        dialog.setVisible(true); // bloquea hasta que se cierre
+
+        // 5. Si se guardó, actualizar en BD y en tabla
+        if (dialog.isGuardado()) {
+            String nuevoNombre = dialog.getNombre();
+            
+            if (categoriaDAO.actualizar(id, nuevoNombre)) {
+                JOptionPane.showMessageDialog(this, "✅ Categoría actualizada con éxito.");
+                cargarDatos(); // refresca el JTable
+            } else {
+                JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
+            }
+            
+            // Opcional: actualizar solo esa celda en la tabla
+            jtContenido.setValueAt(nuevoNombre, filaSeleccionada, 1);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

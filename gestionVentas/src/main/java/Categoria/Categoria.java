@@ -4,14 +4,18 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 public class Categoria {
+    private Integer id;
+    private String nombre;
     
-    public void showPanel(JPanel panel, JPanel jpContenedor) {
-        panel.setSize(426, 325);
-        panel.setLocation(0, 0);
-        
-        jpContenedor.removeAll();
-        jpContenedor.add(panel, BorderLayout.CENTER);
-        jpContenedor.revalidate();
-        jpContenedor.repaint();
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    @Override
+    public String toString() {
+        return nombre; // útil para JComboBox, JList
     }
 }
