@@ -1,19 +1,14 @@
 package Producto;
 
-import Categoria.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-//import Categoria.Categoria;
-//import Categoria.CategoriaDAO;
-import Categoria.Categoria;
-import Categoria.CategoriaDAO;
 import java.awt.Frame;
 import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class Producto_men extends javax.swing.JPanel {
-    private CategoriaDAO categoriaDAO = new CategoriaDAO();
+    private ProductoDAO productoDAO = new ProductoDAO();
     
     /**
      * Creates new form CategoriaForm
@@ -29,7 +24,8 @@ public class Producto_men extends javax.swing.JPanel {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        for (Categoria c : categoriaDAO.listar()) { // ← modelo.Categoria
+        //System.out.println("-->> "+productoDAO.listar().size());
+        for (Producto c : productoDAO.listar()) { // ← modelo.Categoria
             modelo.addRow(new Object[]{c.getId(), c.getNombre()});
         }
         ajustarAnchoColumnas();
@@ -207,7 +203,7 @@ public class Producto_men extends javax.swing.JPanel {
         if (dialog.isGuardado()) {
             String nuevoNombre = dialog.getNombreIngresado();
             
-            if (categoriaDAO.actualizar(id, nuevoNombre)) {
+            if (productoDAO.actualizar(id, nuevoNombre)) {
                 JOptionPane.showMessageDialog(this, "✅ Categoría actualizada con éxito.");
                 cargarDatos(); // refresca el JTable
             } else {
