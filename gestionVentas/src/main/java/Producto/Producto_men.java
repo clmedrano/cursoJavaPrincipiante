@@ -1,5 +1,6 @@
-package Categoria;
+package Producto;
 
+import Categoria.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 //import Categoria.Categoria;
@@ -11,13 +12,13 @@ import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-public class Categoria_men extends javax.swing.JPanel {
+public class Producto_men extends javax.swing.JPanel {
     private CategoriaDAO categoriaDAO = new CategoriaDAO();
     
     /**
      * Creates new form CategoriaForm
      */
-    public Categoria_men() {
+    public Producto_men() {
         initComponents();
         
         // Cargar datos a la tabla del formulario
@@ -66,18 +67,18 @@ public class Categoria_men extends javax.swing.JPanel {
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre"
+                "Código", "Nombre", "Precio compra", "Precio venta", "Categoría", "Saldo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Float.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -88,6 +89,7 @@ public class Categoria_men extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtContenido.setToolTipText("");
         jScrollPane1.setViewportView(jtContenido);
 
         btnNuevo.setText("Nuevo");
@@ -128,7 +130,7 @@ public class Categoria_men extends javax.swing.JPanel {
                     .addComponent(btnEditar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -143,8 +145,8 @@ public class Categoria_men extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -158,20 +160,22 @@ public class Categoria_men extends javax.swing.JPanel {
         }
         
         // 2. Crear y mostrar el diálogo
-        CategoriaForm dialog = new CategoriaForm((Frame) window, true);
+        ProductoForm dialog = new ProductoForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
         // 3. Después de cerrar, verificar si se guardó
         if (dialog.isGuardado()) {
             String nombre = dialog.getNombreIngresado();
-
-            // 4. Usar el DAO para insertar
-            if (categoriaDAO.insertar(nombre)) {
-                JOptionPane.showMessageDialog(this, "✅ Categoría agregada con éxito.");
-                cargarDatos(); // refresca el JTable
-            } else {
-                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
-            }
+            
+            JOptionPane.showMessageDialog(this, "nombre: " + nombre);
+            
+//            // 4. Usar el DAO para insertar
+//            if (categoriaDAO.insertar(nombre)) {
+//                JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
+//                cargarDatos(); // refresca el JTable
+//            } else {
+//                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
+//            }
         }
         // Si fue cancelado, no hace nada
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -180,7 +184,7 @@ public class Categoria_men extends javax.swing.JPanel {
         // 1. Verificar fila seleccionada
         int filaSeleccionada = jtContenido.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una categoría para editar.");
+            JOptionPane.showMessageDialog(this, "Selecciona un Producto para editar.");
             return;
         }
         
@@ -196,7 +200,7 @@ public class Categoria_men extends javax.swing.JPanel {
         }
         
         // 4. Abrir el diálogo en modo edición
-        var dialog = new CategoriaForm((Frame) window, true, id, nombre);
+        var dialog = new ProductoForm((Frame) window, true, id, nombre);
         dialog.setVisible(true); // bloquea hasta que se cierre
 
         // 5. Si se guardó, actualizar en BD y en tabla

@@ -26,8 +26,8 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -69,7 +69,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="295" max="-2" attributes="0"/>
-                  <EmptySpace pref="33" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -85,11 +85,16 @@
             <Component class="javax.swing.JTable" name="jtContenido">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="2" rowCount="2">
+                  <Table columnCount="6" rowCount="2">
                     <Column editable="false" title="C&#xf3;digo" type="java.lang.Integer"/>
                     <Column editable="false" title="Nombre" type="java.lang.String"/>
+                    <Column editable="false" title="Precio compra" type="java.lang.Double"/>
+                    <Column editable="false" title="Precio venta" type="java.lang.Float"/>
+                    <Column editable="false" title="Categor&#xed;a" type="java.lang.String"/>
+                    <Column editable="false" title="Saldo" type="java.lang.Integer"/>
                   </Table>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
           </SubComponents>

@@ -2,6 +2,7 @@ package Dashboard;
 
 import Categoria.Categoria;
 import Categoria.Categoria_men;
+import Producto.Producto_men;
 import javax.swing.JPanel;
 import util.VistaUtil;
 
@@ -38,17 +39,8 @@ public class Dashboard extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jpContenedor.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jpContenedorLayout = new javax.swing.GroupLayout(jpContenedor);
-        jpContenedor.setLayout(jpContenedorLayout);
-        jpContenedorLayout.setHorizontalGroup(
-            jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jpContenedorLayout.setVerticalGroup(
-            jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jpContenedor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jpContenedor.setLayout(new java.awt.BorderLayout());
 
         jpCabecera.setBackground(new java.awt.Color(102, 153, 255));
 
@@ -98,7 +90,9 @@ public class Dashboard extends javax.swing.JFrame {
 
         jpMenu.setBackground(new java.awt.Color(102, 153, 255));
 
+        btnCategorias.setBackground(new java.awt.Color(255, 255, 255));
         btnCategorias.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnCategorias.setForeground(new java.awt.Color(0, 102, 255));
         btnCategorias.setText("Categorías");
         btnCategorias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,7 +100,9 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        btnProductos.setBackground(new java.awt.Color(255, 255, 255));
         btnProductos.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnProductos.setForeground(new java.awt.Color(0, 102, 255));
         btnProductos.setText("Productos");
         btnProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,6 +168,10 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCategoriasActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
+        Producto_men form = new Producto_men();
+        VistaUtil vista = new VistaUtil();
+        
+        vista.showPanel(form, jpContenedor);
         lblTexto.setText("LISTA DE PRODUCTOS");
     }//GEN-LAST:event_btnProductosActionPerformed
 

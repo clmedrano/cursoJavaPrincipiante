@@ -1,11 +1,13 @@
 package Categoria;
 
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-
 public class Categoria {
     private Integer id;
     private String nombre;
+    
+    public Categoria() {
+        this.id = null;
+        this.nombre = "-- Seleccione --";
+    }
     
     // Getters y Setters
     public Integer getId() { return id; }
