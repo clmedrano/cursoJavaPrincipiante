@@ -190,7 +190,7 @@ public class Dashboard extends javax.swing.JFrame {
         VistaUtil vista = new VistaUtil();
         
         vista.showPanel(form, jpContenedor);
-        lblTexto.setText("LISTA DE COMPRAS");
+        lblTexto.setText("LISTA DE COMPRAS ");
     }//GEN-LAST:event_btnComprasActionPerformed
 
     /**
