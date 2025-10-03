@@ -1,7 +1,9 @@
 package Producto;
 
 import Categoria.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 public class ProductoForm extends javax.swing.JDialog {
@@ -9,11 +11,13 @@ public class ProductoForm extends javax.swing.JDialog {
     private Integer id;           // para saber qué registro editar
     private String nombreIngresado = null;
     private Double precioCompra = null;
-    private Float precioVenta = null;
-    private Integer idcategoria = null;
+    private Double precioVenta_Ingresad = null;
+    private Integer idcategoria_Ingresado = null;
     private Double saldo = null;
     private boolean guardado = false;
     
+    private Map<String, Integer> mapaCategoria = new HashMap<>();
+
     public ProductoForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -24,11 +28,12 @@ public class ProductoForm extends javax.swing.JDialog {
         //System.out.println("NUEVO REGISTROS.....");
         setTitle("Nuevo Producto");
         
+        // Cargar combobox de Categorías
         cargarCategorias();
     }
     
     // Constructor con datos (para edición)
-    public ProductoForm(java.awt.Frame parent, boolean modal, Integer id, String nombre) {
+    public ProductoForm(java.awt.Frame parent, boolean modal, Integer id, String nombre, Integer idcategoria, Double precioVenta) {
         super(parent, modal);
         initComponents();
         
@@ -39,25 +44,61 @@ public class ProductoForm extends javax.swing.JDialog {
         this.id = id;
         
         // Cargar el nombre en el campo de texto
-        txtNombre.setText(nombre); // suponiendo que tienes txtNombre
+        txtNombre.setText(nombre);
+        txtPrecioVenta.setText(String.valueOf(precioVenta));
         setTitle("Editar Producto");
+        
+        // Cargar combobox de Categorías
+        cargarCategorias();
+        
+        // ✅ Autoseleccionar la categoría
+        seleccionarCategoriaPorId(idcategoria);
     }
     
     private void cargarCategorias() {
         CategoriaDAO dao = new CategoriaDAO();
         List<Categoria> categorias = dao.listar();
         
+        // Limpiar
         cbCategoria.removeAllItems();
-//        cbCategoria.addItem(new Categoria()); // Opción vacía (ver abajo)
-        cbCategoria.addItem(""); // Opción vacía (ver abajo)
+        mapaCategoria.clear();
+        
+        // Opción vacía
+        cbCategoria.addItem("-- Seleccione --");
+        mapaCategoria.put("-- Seleccione --", null);
+        
         for (Categoria c : categorias) {
-//            cbCategoria.addItem(c);
-            cbCategoria.addItem(c.getNombre());
+            cbCategoria.addItem(c.getNombre());              // Texto en el combo
+            mapaCategoria.put(c.getNombre(), c.getId()); // Asociar nombre -> id
         }
     }
-    // Método para obtener el nombre ingresado
+    public void seleccionarCategoriaPorId(Integer categoriaId) {
+        if (categoriaId == null) {
+            cbCategoria.setSelectedIndex(0); // "-- Seleccione --"
+            return;
+        }
+        
+        // Buscar el nombre asociado al ID
+        for (Map.Entry<String, Integer> entry : mapaCategoria.entrySet()) {
+            if (categoriaId.equals(entry.getValue())) {
+                cbCategoria.setSelectedItem(entry.getKey());
+                return;
+            }
+        }
+        
+        // Si no se encuentra, seleccionar la opción vacía
+        cbCategoria.setSelectedIndex(0);
+    }
+    
+    // Método para obtener la variable ingresada en los campos del formulario
     public String getNombreIngresado() {
         return nombreIngresado;
+    }
+    public Integer getIdCategoriaIngresado() {
+        return idcategoria_Ingresado;
+    }
+    public Double getPrecioVtaIngresado() {
+        return precioVenta_Ingresad;
     }
     // Método para saber si se guardó
     public boolean isGuardado() {
@@ -80,12 +121,14 @@ public class ProductoForm extends javax.swing.JDialog {
         btnCancelar = new javax.swing.JButton();
         cbCategoria = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
+        txtPrecioVenta = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("Nombre");
+        jLabel1.setText("Nombre:");
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +144,9 @@ public class ProductoForm extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText("Categoría");
+        jLabel2.setText("Categoría:");
+
+        jLabel3.setText("Precio venta:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -114,12 +159,15 @@ public class ProductoForm extends javax.swing.JDialog {
                     .addComponent(cbCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtPrecioVenta, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 79, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -134,7 +182,11 @@ public class ProductoForm extends javax.swing.JDialog {
                 .addComponent(jLabel2)
                 .addGap(5, 5, 5)
                 .addComponent(cbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar))
@@ -163,14 +215,37 @@ public class ProductoForm extends javax.swing.JDialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String nombre = txtNombre.getText().trim();
+        String nombreCategoriaSeleccionada = (String) cbCategoria.getSelectedItem();
         
         if (nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
             txtNombre.requestFocus();
             return;
         }
+        if (nombreCategoriaSeleccionada == null || "-- Seleccione --".equals(nombreCategoriaSeleccionada)) {
+            JOptionPane.showMessageDialog(this, "Seleccione alguna categoría.");
+            txtNombre.requestFocus();
+            return;
+        }
+        // Obtener el ID de la categoría
+        Integer idcategoria = mapaCategoria.get(nombreCategoriaSeleccionada);
         
+        // Validar campo numérico
+        Double precio;
+        try {
+            precio = Double.valueOf(txtPrecioVenta.getText());
+            if(precio <= 0) {
+                throw new NumberFormatException("Precio de venta debe ser mayor que cero. ");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Precio de venta inválido. Introduzca un número positivo.");
+            txtPrecioVenta.requestFocus();
+            return;
+        }
+                
         this.nombreIngresado = nombre;
+        this.idcategoria_Ingresado = idcategoria;
+        this.precioVenta_Ingresad = precio;
         this.guardado = true;
         dispose(); // cierra el diálogo        
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -230,7 +305,9 @@ public class ProductoForm extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbCategoria;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecioVenta;
     // End of variables declaration//GEN-END:variables
 }

@@ -2,6 +2,7 @@ package Dashboard;
 
 import Categoria.Categoria;
 import Categoria.Categoria_men;
+import Compras.Compra_men;
 import Producto.Producto_men;
 import javax.swing.JPanel;
 import util.VistaUtil;
@@ -34,6 +35,7 @@ public class Dashboard extends javax.swing.JFrame {
         lblTexto = new javax.swing.JLabel();
         jpMenu = new javax.swing.JPanel();
         btnCategorias = new javax.swing.JButton();
+        btnCompras = new javax.swing.JButton();
         btnProductos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -55,7 +57,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jpCabeceraLayout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(666, Short.MAX_VALUE))
         );
         jpCabeceraLayout.setVerticalGroup(
             jpCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,7 +80,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jpTituloLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(lblTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(446, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpTituloLayout.setVerticalGroup(
             jpTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,6 +102,16 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        btnCompras.setBackground(new java.awt.Color(255, 255, 255));
+        btnCompras.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnCompras.setForeground(new java.awt.Color(0, 102, 255));
+        btnCompras.setText("Compras");
+        btnCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprasActionPerformed(evt);
+            }
+        });
+
         btnProductos.setBackground(new java.awt.Color(255, 255, 255));
         btnProductos.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(0, 102, 255));
@@ -114,17 +126,20 @@ public class Dashboard extends javax.swing.JFrame {
         jpMenu.setLayout(jpMenuLayout);
         jpMenuLayout.setHorizontalGroup(
             jpMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCategorias, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addComponent(btnCompras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCategorias, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
         );
         jpMenuLayout.setVerticalGroup(
             jpMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpMenuLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(btnCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(4, 4, 4)
                 .addComponent(btnProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(207, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -175,6 +190,14 @@ public class Dashboard extends javax.swing.JFrame {
         lblTexto.setText("LISTA DE PRODUCTOS");
     }//GEN-LAST:event_btnProductosActionPerformed
 
+    private void btnComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprasActionPerformed
+        Compra_men form = new Compra_men();
+        VistaUtil vista = new VistaUtil();
+        
+        vista.showPanel(form, jpContenedor);
+        lblTexto.setText("LISTA DE COMPRAS");
+    }//GEN-LAST:event_btnComprasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -213,6 +236,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCategorias;
+    private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnProductos;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jpCabecera;

@@ -1,4 +1,4 @@
-package Producto;
+package Compras;
 
 import BaseDatos.ConexionMySQL;
 import java.sql.*;
@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // DAO = Data Access Object → patrón común para operaciones de base de datos
-public class ProductoDAO {
+public class CompraDAO {
     private ConexionMySQL conexion;
 
-    public ProductoDAO() {
+    public CompraDAO() {
         this.conexion = new ConexionMySQL();
     }
 
@@ -39,8 +39,8 @@ public class ProductoDAO {
      * Obtener todas las categorías
      * @return 
      */
-    public List<Producto> listar() {
-        List<Producto> productos = new ArrayList<>();
+    public List<Compra> listar() {
+        List<Compra> productos = new ArrayList<>();
         String sql = """
                      SELECT p.id, p.name, p.precio_compra, p.precio_venta, p.idcategoria, c.name as grupo, p.saldo 
                      FROM producto p INNER JOIN categoria c ON p.idcategoria = c.id""";
@@ -50,14 +50,14 @@ public class ProductoDAO {
             ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                Producto c = new Producto();
+                Compra c = new Compra();
                 c.setId(rs.getInt("id"));
-                c.setNombre(rs.getString("name"));
-                c.setPrecioCompra(rs.getDouble("precio_compra"));
-                c.setPrecioVenta(rs.getDouble("precio_venta"));
-                c.setIdCategoria(rs.getInt("idcategoria"));
-                c.setGrupo(rs.getString("grupo"));
-                c.setSaldo(rs.getInt("saldo"));
+//                c.setNombre(rs.getString("name"));
+//                c.setPrecioCompra(rs.getDouble("precio_compra"));
+//                c.setPrecioVenta(rs.getDouble("precio_venta"));
+//                c.setIdCategoria(rs.getInt("idcategoria"));
+//                c.setGrupo(rs.getString("grupo"));
+//                c.setSaldo(rs.getInt("saldo"));
                 
                 productos.add(c);
             }

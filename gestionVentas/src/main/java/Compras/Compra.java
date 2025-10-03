@@ -1,8 +1,8 @@
-package Producto;
+package Compras;
 
 import Categoria.Categoria;
 
-public class Producto {
+public class Compra {
     private Integer id;
     private String nombre;
     private Categoria categoria;
@@ -13,8 +13,8 @@ public class Producto {
     private Integer saldo;
     
     // Constructores
-    public Producto() {}
-    public Producto(String nombre, Categoria categoria) {
+    public Compra() {}
+    public Compra(String nombre, Categoria categoria) {
         this.nombre = nombre;
         this.categoria = categoria;
     }

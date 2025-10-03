@@ -26,7 +26,7 @@ public class Producto_men extends javax.swing.JPanel {
         
         //System.out.println("-->> "+productoDAO.listar().size());
         for (Producto c : productoDAO.listar()) { // ← modelo.Categoria
-            modelo.addRow(new Object[]{c.getId(), c.getNombre()});
+            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
         }
         ajustarAnchoColumnas();
     }
@@ -38,6 +38,11 @@ public class Producto_men extends javax.swing.JPanel {
         columnModel.getColumn(0).setPreferredWidth(50);   // ID
         columnModel.getColumn(0).setMinWidth(50);
         columnModel.getColumn(0).setMaxWidth(80);
+        
+        // Ocultar la columna "idcategoria"
+        columnModel.getColumn(4).setMinWidth(0);
+        columnModel.getColumn(4).setMaxWidth(0);
+        columnModel.getColumn(4).setWidth(0);
         
 //        // Columna 1: Nombre → más ancha
 //        columnModel.getColumn(1).setPreferredWidth(200);
@@ -63,18 +68,18 @@ public class Producto_men extends javax.swing.JPanel {
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre", "Precio compra", "Precio venta", "Categoría", "Saldo"
+                "Código", "Nombre", "Precio compra", "Precio venta", "IdCategoria", "Categoría", "Saldo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Float.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Float.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -162,16 +167,16 @@ public class Producto_men extends javax.swing.JPanel {
         // 3. Después de cerrar, verificar si se guardó
         if (dialog.isGuardado()) {
             String nombre = dialog.getNombreIngresado();
+            Integer idcategoria = dialog.getIdCategoriaIngresado();
+            Double precioVta = dialog.getPrecioVtaIngresado();
             
-            JOptionPane.showMessageDialog(this, "nombre: " + nombre);
-            
-//            // 4. Usar el DAO para insertar
-//            if (categoriaDAO.insertar(nombre)) {
-//                JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
-//                cargarDatos(); // refresca el JTable
-//            } else {
-//                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
-//            }
+            // 4. Usar el DAO para insertar
+            if (productoDAO.insertar(nombre, idcategoria, precioVta)) {
+                cargarDatos(); // refresca el JTable
+                JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
+            } else {
+                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
+            }
         }
         // Si fue cancelado, no hace nada
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -187,7 +192,10 @@ public class Producto_men extends javax.swing.JPanel {
         // 2. Obtener datos
         Integer id = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
         String nombre = (String) jtContenido.getValueAt(filaSeleccionada, 1);
-
+        Double precioVta = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
+        Integer idcategoria = (Integer) jtContenido.getValueAt(filaSeleccionada, 4); // Obtiene el ID de la categoría (columna oculta)
+        String grupo = (String) jtContenido.getValueAt(filaSeleccionada, 5);
+        
         // 3. Obtener ventana padre
         Window window = SwingUtilities.getWindowAncestor(this);
         if (!(window instanceof Frame)) {
@@ -196,16 +204,18 @@ public class Producto_men extends javax.swing.JPanel {
         }
         
         // 4. Abrir el diálogo en modo edición
-        var dialog = new ProductoForm((Frame) window, true, id, nombre);
+        var dialog = new ProductoForm((Frame) window, true, id, nombre, idcategoria, precioVta);
         dialog.setVisible(true); // bloquea hasta que se cierre
 
         // 5. Si se guardó, actualizar en BD y en tabla
         if (dialog.isGuardado()) {
             String nuevoNombre = dialog.getNombreIngresado();
+            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
+            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
             
-            if (productoDAO.actualizar(id, nuevoNombre)) {
-                JOptionPane.showMessageDialog(this, "✅ Categoría actualizada con éxito.");
+            if (productoDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
                 cargarDatos(); // refresca el JTable
+                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
             }

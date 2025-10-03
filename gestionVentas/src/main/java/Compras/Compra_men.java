@@ -1,23 +1,19 @@
-package Categoria;
+package Compras;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-//import Categoria.Categoria;
-//import Categoria.CategoriaDAO;
-import Categoria.Categoria;
-import Categoria.CategoriaDAO;
 import java.awt.Frame;
 import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-public class Categoria_men extends javax.swing.JPanel {
-    private CategoriaDAO categoriaDAO = new CategoriaDAO();
+public class Compra_men extends javax.swing.JPanel {
+    private CompraDAO compraDAO = new CompraDAO();
     
     /**
      * Creates new form CategoriaForm
      */
-    public Categoria_men() {
+    public Compra_men() {
         initComponents();
         
         // Cargar datos a la tabla del formulario
@@ -28,8 +24,10 @@ public class Categoria_men extends javax.swing.JPanel {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        for (Categoria c : categoriaDAO.listar()) { // ← modelo.Categoria
-            modelo.addRow(new Object[]{c.getId(), c.getNombre()});
+        //System.out.println("-->> "+productoDAO.listar().size());
+        for (Compra c : compraDAO.listar()) { // ← modelo.Categoria
+//            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
+            modelo.addRow(new Object[]{c.getId()});
         }
         ajustarAnchoColumnas();
     }
@@ -41,6 +39,11 @@ public class Categoria_men extends javax.swing.JPanel {
         columnModel.getColumn(0).setPreferredWidth(50);   // ID
         columnModel.getColumn(0).setMinWidth(50);
         columnModel.getColumn(0).setMaxWidth(80);
+        
+        // Ocultar la columna "idcategoria"
+        columnModel.getColumn(4).setMinWidth(0);
+        columnModel.getColumn(4).setMaxWidth(0);
+        columnModel.getColumn(4).setWidth(0);
         
 //        // Columna 1: Nombre → más ancha
 //        columnModel.getColumn(1).setPreferredWidth(200);
@@ -66,18 +69,18 @@ public class Categoria_men extends javax.swing.JPanel {
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre"
+                "Código", "Nombre", "Precio compra", "Precio venta", "IdCategoria", "Categoría", "Saldo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Float.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -88,6 +91,7 @@ public class Categoria_men extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtContenido.setToolTipText("");
         jScrollPane1.setViewportView(jtContenido);
 
         btnNuevo.setText("Nuevo");
@@ -128,7 +132,7 @@ public class Categoria_men extends javax.swing.JPanel {
                     .addComponent(btnEditar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -143,8 +147,8 @@ public class Categoria_men extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -158,36 +162,42 @@ public class Categoria_men extends javax.swing.JPanel {
         }
         
         // 2. Crear y mostrar el diálogo
-        CategoriaForm dialog = new CategoriaForm((Frame) window, true);
+        CompraForm dialog = new CompraForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
-        // 3. Después de cerrar, verificar si se guardó
-        if (dialog.isGuardado()) {
-            String nombre = dialog.getNombreIngresado();
-
-            // 4. Usar el DAO para insertar
-            if (categoriaDAO.insertar(nombre)) {
-                cargarDatos(); // refresca el JTable
-                JOptionPane.showMessageDialog(this, "✅ Categoría agregada con éxito.");
-            } else {
-                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
-            }
-        }
-        // Si fue cancelado, no hace nada
+        
+//        // 3. Después de cerrar, verificar si se guardó
+//        if (dialog.isGuardado()) {
+//            String nombre = dialog.getNombreIngresado();
+//            Integer idcategoria = dialog.getIdCategoriaIngresado();
+//            Double precioVta = dialog.getPrecioVtaIngresado();
+//            
+//            // 4. Usar el DAO para insertar
+//            if (compraDAO.insertar(nombre, idcategoria, precioVta)) {
+//                cargarDatos(); // refresca el JTable
+//                JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
+//            } else {
+//                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
+//            }
+//        }
+//        // Si fue cancelado, no hace nada
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // 1. Verificar fila seleccionada
         int filaSeleccionada = jtContenido.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una categoría para editar.");
+            JOptionPane.showMessageDialog(this, "Selecciona un Producto para editar.");
             return;
         }
         
         // 2. Obtener datos
         Integer id = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
         String nombre = (String) jtContenido.getValueAt(filaSeleccionada, 1);
-
+        Double precioVta = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
+        Integer idcategoria = (Integer) jtContenido.getValueAt(filaSeleccionada, 4); // Obtiene el ID de la categoría (columna oculta)
+        String grupo = (String) jtContenido.getValueAt(filaSeleccionada, 5);
+        
         // 3. Obtener ventana padre
         Window window = SwingUtilities.getWindowAncestor(this);
         if (!(window instanceof Frame)) {
@@ -196,16 +206,18 @@ public class Categoria_men extends javax.swing.JPanel {
         }
         
         // 4. Abrir el diálogo en modo edición
-        var dialog = new CategoriaForm((Frame) window, true, id, nombre);
+        var dialog = new CompraForm((Frame) window, true, id, nombre, idcategoria, precioVta);
         dialog.setVisible(true); // bloquea hasta que se cierre
 
         // 5. Si se guardó, actualizar en BD y en tabla
         if (dialog.isGuardado()) {
             String nuevoNombre = dialog.getNombreIngresado();
+            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
+            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
             
-            if (categoriaDAO.actualizar(id, nuevoNombre)) {
+            if (compraDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
                 cargarDatos(); // refresca el JTable
-                JOptionPane.showMessageDialog(this, "✅ Categoría actualizada con éxito.");
+                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
             }
