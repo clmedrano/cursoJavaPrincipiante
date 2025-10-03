@@ -1,10 +1,8 @@
 package Dashboard;
 
-import Categoria.Categoria;
 import Categoria.Categoria_men;
-import Compras.Compra_men;
 import Producto.Producto_men;
-import javax.swing.JPanel;
+import Compras.Compra_men;
 import util.VistaUtil;
 
 public class Dashboard extends javax.swing.JFrame {
@@ -92,7 +90,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         jpMenu.setBackground(new java.awt.Color(102, 153, 255));
 
-        btnCategorias.setBackground(new java.awt.Color(255, 255, 255));
         btnCategorias.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnCategorias.setForeground(new java.awt.Color(0, 102, 255));
         btnCategorias.setText("Categorías");
@@ -102,7 +99,6 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        btnCompras.setBackground(new java.awt.Color(255, 255, 255));
         btnCompras.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnCompras.setForeground(new java.awt.Color(0, 102, 255));
         btnCompras.setText("Compras");
@@ -112,7 +108,6 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        btnProductos.setBackground(new java.awt.Color(255, 255, 255));
         btnProductos.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnProductos.setForeground(new java.awt.Color(0, 102, 255));
         btnProductos.setText("Productos");

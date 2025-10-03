@@ -140,6 +140,8 @@ public class CompraForm extends javax.swing.JDialog {
             }
         });
 
+        txtProducto.setEnabled(false);
+
         jLabel2.setText("Producto");
 
         jLabel3.setText("Cantidad");
