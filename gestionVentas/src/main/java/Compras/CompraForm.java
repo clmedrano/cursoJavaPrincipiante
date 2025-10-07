@@ -2,27 +2,43 @@ package Compras;
 
 import Producto.*;
 import Categoria.*;
+import Compras.detalle.CompraItem;
 import Compras.detalle.ListaProductos;
 import java.awt.Frame;
 import java.awt.Window;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import util.VistaUtil;
 
 public class CompraForm extends javax.swing.JDialog {
     // Variables de instancia
     private Integer id;           // para saber qué registro editar
     private String nombreIngresado = null;
-    private Double precioCompra = null;
     private Double precioVenta_Ingresad = null;
     private Integer idcategoria_Ingresado = null;
-    private Double saldo = null;
     private boolean guardado = false;
     
+    private VistaUtil vista = new VistaUtil();
+    private CompraDAO compraDAO = new CompraDAO();
+    private CompraItem compraItem = new CompraItem();
+    // Variables globales
+    private Integer idProducto;
+    private String nombreProducto;
+    
     private Map<String, Integer> mapaCategoria = new HashMap<>();
-
+    
+    // PASO 2: Declara una lista como variable de instancia
+    private List<CompraItem> items = new ArrayList<>();
+    private DefaultTableModel modeloTabla;
+    
     public CompraForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -30,12 +46,23 @@ public class CompraForm extends javax.swing.JDialog {
         // Posicionar en el centro de lapantalla
         this.setLocationRelativeTo(this);
         
-        //System.out.println("NUEVO REGISTROS.....");
         setTitle("Nueva compra");
+        
+        // PASO 3: Inicializa el modelo de la tabla una sola vez
+        modeloTabla = new DefaultTableModel(new Object[]{"ID", "Producto", "Cantidad", "Precio", "SubTotal"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Tabla no editable
+            }
+        };
+        jtContenido.setModel(modeloTabla);
+        
+        // Establecer foco en el campo NIT
+        txtNit.requestFocus();
     }
     
     // Constructor con datos (para edición)
-    public CompraForm(java.awt.Frame parent, boolean modal, Integer id, String nombre, Integer idcategoria, Double precioVenta) {
+    public CompraForm(java.awt.Frame parent, boolean modal, Integer id, Integer nit, String proveedor, Double total) {
         super(parent, modal);
         initComponents();
         
@@ -44,26 +71,52 @@ public class CompraForm extends javax.swing.JDialog {
         
         // Editar Registro
         this.id = id;
+        setTitle("Editar compra");
         
-//        // Cargar el nombre en el campo de texto
-//        txtNombre.setText(nombre);
-//        txtPrecioVenta.setText(String.valueOf(precioVenta));
-//        setTitle("Editar compra");
+        // Cargar los datos a sus respectivos campos
+        txtNit.setText(nit.toString());
+        txtProveedor.setText(proveedor);
+//        txtProveedor.setText(String.valueOf(precioVenta));
+        cargarItem();
+    }
+    private void cargarItem() {
+        DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
+        modelo.setRowCount(0);
+        
+        for (CompraItem c : compraItem.compraItem(0)) {
+            modelo.addRow(new Object[]{c.getIdcompra(), c.getNombreProducto(), c.getCantidad(), c.getPrecio(), c.getSubTotal()});
+        }
+//        ajustarAnchoColumnas();
     }
         
-    // Método para obtener la variable ingresada en los campos del formulario
-    public String getNombreIngresado() {
-        return nombreIngresado;
-    }
-    public Integer getIdCategoriaIngresado() {
-        return idcategoria_Ingresado;
-    }
-    public Double getPrecioVtaIngresado() {
-        return precioVenta_Ingresad;
-    }
-    // Método para saber si se guardó
-    public boolean isGuardado() {
-        return guardado;
+//    // Método para obtener la variable ingresada en los campos del formulario
+//    public String getNombreIngresado() {
+//        return nombreIngresado;
+//    }
+//    public Integer getIdCategoriaIngresado() {
+//        return idcategoria_Ingresado;
+//    }
+//    public Double getPrecioVtaIngresado() {
+//        return precioVenta_Ingresad;
+//    }
+//    // Método para saber si se guardó
+//    public boolean isGuardado() {
+//        return guardado;
+//    }
+    
+    private Integer parsearNit(String texto)
+    {
+        if (texto == null || texto.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El NIT es obligatorio.");
+            return null;
+        }
+        
+        try {
+            return Integer.valueOf(texto.trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "NIT inválido. Solo se permiten números.");
+            return null;
+        }
     }
     
     /**
@@ -78,21 +131,25 @@ public class CompraForm extends javax.swing.JDialog {
         jProgressBar1 = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
+        txtProveedor = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         txtNit = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtContenido = new javax.swing.JTable();
         btnBuscarProducto = new javax.swing.JButton();
         txtProducto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtCantidad = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
+        btnAgregar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -119,7 +176,7 @@ public class CompraForm extends javax.swing.JDialog {
 
         jLabel4.setText("NIT/CI:");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -130,7 +187,7 @@ public class CompraForm extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jtContenido);
 
         btnBuscarProducto.setText("Buscar");
         btnBuscarProducto.setToolTipText("");
@@ -146,7 +203,20 @@ public class CompraForm extends javax.swing.JDialog {
 
         jLabel3.setText("Cantidad");
 
-        jLabel5.setText("Precio");
+        jLabel5.setText("Precio compra");
+
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Descripción:");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,24 +224,25 @@ public class CompraForm extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4)
-                    .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                    .addComponent(jLabel6)
+                    .addComponent(jScrollPane2)
+                    .addComponent(txtNit)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -179,13 +250,13 @@ public class CompraForm extends javax.swing.JDialog {
                         .addGap(3, 3, 3)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(2, 2, 2)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtPrecio)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
+                        .addGap(3, 3, 3)
+                        .addComponent(btnAgregar)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -206,25 +277,34 @@ public class CompraForm extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(12, 12, 12)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel2)
                                             .addComponent(jLabel3)
-                                            .addComponent(jLabel5))
-                                        .addGap(8, 8, 8))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnBuscarProducto)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2)
-                                    .addComponent(jTextField1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(jLabel5)))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(8, 8, 8)
+                                            .addComponent(jLabel2)
+                                            .addGap(2, 2, 2))
+                                        .addComponent(btnBuscarProducto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addGap(8, 8, 8)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                                            .addComponent(txtCantidad)
+                                            .addComponent(txtPrecio))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnAgregar))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
@@ -253,46 +333,50 @@ public class CompraForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String nombre = txtNombre.getText().trim();
-//        String nombreCategoriaSeleccionada = (String) cbCategoria.getSelectedItem();
-//        
-//        if (nombre.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
-//            txtNombre.requestFocus();
-//            return;
-//        }
-//        if (nombreCategoriaSeleccionada == null || "-- Seleccione --".equals(nombreCategoriaSeleccionada)) {
-//            JOptionPane.showMessageDialog(this, "Seleccione alguna categoría.");
-//            txtNombre.requestFocus();
-//            return;
-//        }
-//        // Obtener el ID de la categoría
-//        Integer idcategoria = mapaCategoria.get(nombreCategoriaSeleccionada);
-//        
-//        // Validar campo numérico
-//        Double precio;
-//        try {
-//            precio = Double.valueOf(txtPrecioVenta.getText());
-//            if(precio <= 0) {
-//                throw new NumberFormatException("Precio de venta debe ser mayor que cero. ");
-//            }
-//        } catch (NumberFormatException ex) {
-//            JOptionPane.showMessageDialog(this, "Precio de venta inválido. Introduzca un número positivo.");
-//            txtPrecioVenta.requestFocus();
-//            return;
-//        }
-//                
-//        this.nombreIngresado = nombre;
-//        this.idcategoria_Ingresado = idcategoria;
-//        this.precioVenta_Ingresad = precio;
-//        this.guardado = true;
-//        dispose(); // cierra el diálogo        
+        // OBTENER LOS DATOS DE LA CABECERA ( tabla: compra )
+        Integer nit = parsearNit(txtNit.getText());
+        String proveedor = txtProveedor.getText();
+        if (nit == null) {
+            txtNit.requestFocus();
+            return; // No continuar
+        }
+        if(proveedor.isEmpty()) {
+            txtProveedor.requestFocus();
+            return; // No continuar
+        }
+        
+        // 1. Validar que haya ítems
+        if (items.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Agrega al menos un producto.");
+            return;
+        }
+        
+        // 2. Calcular total
+        Double total = items.stream().mapToDouble(CompraItem::getSubTotal).sum();
+        
+        // 3. Guardar cabecera
+        Integer idCompra = compraDAO.insertarCabecera(nit, proveedor, new java.sql.Date(System.currentTimeMillis()), total);
+        if (idCompra == null) {
+            JOptionPane.showMessageDialog(this, "❌ Error al crear la compra.");
+            return;
+        }
+        
+        // 4. Guardar detalles
+        for (CompraItem item : items) {
+            if (!compraDAO.insertarItem(idCompra, item.getIdProducto(), item.getCantidad(), item.getPrecio(), item.getSubTotal())) {
+                JOptionPane.showMessageDialog(this, "❌ Error al guardar el producto: " + item.getNombreProducto());
+                return;
+            }
+        }
+        
+        dispose(); // cierra el diálogo
+        JOptionPane.showMessageDialog(this, "✅ Compra registrada con éxito.");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // No se guarda
-        this.guardado = false;
-        dispose();
+//        // No se guarda
+//        this.guardado = false;
+        dispose(); // cerrar formulario
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
@@ -307,8 +391,67 @@ public class CompraForm extends javax.swing.JDialog {
         ListaProductos dialog = new ListaProductos((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
+        /*
+            Punto clave, después de que se cierre el formulario se debe obtener los valores:
+                1. idproducto
+                2. nombreProducto
+        */
+        idProducto = dialog.getIdProducto();
+        nombreProducto = dialog.getNombreProducto();
+        
+        txtProducto.setText(nombreProducto);
+        txtCantidad.requestFocus(); // Establece el foco en el campo cantidad
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        Integer cantidad = vista.valorEntero(txtCantidad, this);
+        Double precio = vista.valorDouble(txtPrecio, this);
+        Double subTotal = cantidad * precio;
+        
+        // PASO 4: Método para agregar ítem (corregido)
+        if (cantidad == null || precio == null) {
+            return; // Los métodos valorEntero/valorDouble ya muestran error
+        }
+        if (cantidad <= 0 || precio <= 0) {
+            JOptionPane.showMessageDialog(this, "Cantidad y precio deben ser mayores que 0.");
+            return;
+        }
+        
+        // Crear ítem
+        CompraItem item = new CompraItem(idProducto, nombreProducto, cantidad, precio);
+        
+        // Añadir a la lista
+        items.add(item);
+        
+        // Añadir a la tabla (¡sin borrar todo!)
+        modeloTabla.addRow(new Object[]{
+            item.getIdProducto(),
+            item.getNombreProducto(),
+            item.getCantidad(),
+            item.getPrecio(),
+            item.getSubTotal()
+        });
+        
+        // Limpiar campos
+        idProducto = 0;
+        nombreProducto = "";
+        txtProducto.setText("");
+        txtCantidad.setText("");
+        txtPrecio.setText("");
+        btnBuscarProducto.requestFocus();
+        
+        // Actualizar total
+//        calcularTotal();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+    
+    // PASO 5: Método para calcular total (opcional)
+    private void calcularTotal() {
+        Double total = items.stream()
+                            .mapToDouble(CompraItem::getSubTotal)
+                            .sum();
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -355,6 +498,7 @@ public class CompraForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
@@ -363,15 +507,18 @@ public class CompraForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTable jtContenido;
+    private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtNit;
-    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtProducto;
+    private javax.swing.JTextField txtProveedor;
     // End of variables declaration//GEN-END:variables
 }

@@ -37,35 +37,49 @@ public class ProductoDAO {
 
     /**
      * Obtener todas las categorías
+     * @param query
      * @return 
      */
-    public List<Producto> listar() {
+    public List<Producto> listar(String query) {
         List<Producto> productos = new ArrayList<>();
-        String sql = """
-                     SELECT p.id, p.name, p.precio_compra, p.precio_venta, p.idcategoria, c.name as grupo, p.saldo 
-                     FROM producto p INNER JOIN categoria c ON p.idcategoria = c.id""";
+        
+        // Base de la consulta
+        StringBuilder sql = new StringBuilder("""
+            SELECT p.id, p.name, p.precio_compra, p.precio_venta, p.idcategoria, c.name as grupo, p.saldo 
+            FROM producto p 
+            INNER JOIN categoria c ON p.idcategoria = c.id
+            """);
+        
+        // Añadir condición de búsqueda si hay query
+        if (query != null && !query.trim().isEmpty()) {
+            sql.append(" WHERE p.name LIKE ?"); // ILIKE = case-insensitive en PostgreSQL
+        }
         
         try (Connection conn = conexion.getConexion();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()) {
+            PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
-            while (rs.next()) {
-                Producto c = new Producto();
-                c.setId(rs.getInt("id"));
-                c.setNombre(rs.getString("name"));
-                c.setPrecioCompra(rs.getDouble("precio_compra"));
-                c.setPrecioVenta(rs.getDouble("precio_venta"));
-                c.setIdCategoria(rs.getInt("idcategoria"));
-                c.setGrupo(rs.getString("grupo"));
-                c.setSaldo(rs.getInt("saldo"));
-                
-                productos.add(c);
+            // Establecer parámetro si hay búsqueda
+            if (query != null && !query.trim().isEmpty()) {
+               ps.setString(1, "%" + query.trim() + "%");
             }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+               while (rs.next()) {
+                    Producto c = new Producto();
+                    c.setId(rs.getInt("id"));
+                    c.setNombre(rs.getString("name"));
+                    c.setPrecioCompra(rs.getDouble("precio_compra"));
+                    c.setPrecioVenta(rs.getDouble("precio_venta"));
+                    c.setIdCategoria(rs.getInt("idcategoria"));
+                    c.setGrupo(rs.getString("grupo"));
+                    c.setSaldo(rs.getInt("saldo"));
 
+                    productos.add(c);
+                }
+           }
         } catch (SQLException e) {
-            e.printStackTrace();
+           e.printStackTrace();
         }
-
         return productos;
     }
 

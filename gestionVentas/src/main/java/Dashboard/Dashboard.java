@@ -6,7 +6,8 @@ import Compras.Compra_men;
 import util.VistaUtil;
 
 public class Dashboard extends javax.swing.JFrame {
-
+    private VistaUtil vista = new VistaUtil();
+    
     /**
      * Creates new form Principal
      */
@@ -171,7 +172,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void btnCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriasActionPerformed
         Categoria_men form = new Categoria_men();
-        VistaUtil vista = new VistaUtil();
         
         vista.showPanel(form, jpContenedor);
         lblTexto.setText("LISTA DE CATEGORÍAS");
@@ -179,7 +179,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         Producto_men form = new Producto_men();
-        VistaUtil vista = new VistaUtil();
         
         vista.showPanel(form, jpContenedor);
         lblTexto.setText("LISTA DE PRODUCTOS");
@@ -187,7 +186,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void btnComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprasActionPerformed
         Compra_men form = new Compra_men();
-        VistaUtil vista = new VistaUtil();
         
         vista.showPanel(form, jpContenedor);
         lblTexto.setText("LISTA DE COMPRAS ");

@@ -17,15 +17,15 @@ public class Producto_men extends javax.swing.JPanel {
         initComponents();
         
         // Cargar datos a la tabla del formulario
-        cargarDatos();
+        cargarDatos("");
     }
     
-    private void cargarDatos() {
+    private void cargarDatos(String query) {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
         //System.out.println("-->> "+productoDAO.listar().size());
-        for (Producto c : productoDAO.listar()) { // ← modelo.Categoria
+        for (Producto c : productoDAO.listar(query)) { // ← modelo.Categoria
             modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
         }
         ajustarAnchoColumnas();
@@ -172,7 +172,7 @@ public class Producto_men extends javax.swing.JPanel {
             
             // 4. Usar el DAO para insertar
             if (productoDAO.insertar(nombre, idcategoria, precioVta)) {
-                cargarDatos(); // refresca el JTable
+                cargarDatos(""); // refresca el JTable
                 JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
@@ -214,7 +214,7 @@ public class Producto_men extends javax.swing.JPanel {
             Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
             
             if (productoDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
-                cargarDatos(); // refresca el JTable
+                cargarDatos(""); // refresca el JTable
                 JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
             } else {
                 JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");

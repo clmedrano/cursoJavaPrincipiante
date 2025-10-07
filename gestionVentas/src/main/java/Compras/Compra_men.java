@@ -1,14 +1,21 @@
 package Compras;
 
+import Compras.detalle.CompraItem;
+import java.awt.Desktop;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.Frame;
 import java.awt.Window;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import util.ReporteCompra;
 
 public class Compra_men extends javax.swing.JPanel {
     private CompraDAO compraDAO = new CompraDAO();
+    private CompraItem compraItem = new CompraItem();
     
     /**
      * Creates new form CategoriaForm
@@ -24,10 +31,8 @@ public class Compra_men extends javax.swing.JPanel {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        //System.out.println("-->> "+productoDAO.listar().size());
-        for (Compra c : compraDAO.listar()) { // ← modelo.Categoria
-//            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
-            modelo.addRow(new Object[]{c.getId()});
+        for (Compra c : compraDAO.listar()) {
+            modelo.addRow(new Object[]{c.getId(), c.getNit(), c.getProveedor(), c.getTotal(), c.getFecha()});
         }
         ajustarAnchoColumnas();
     }
@@ -35,15 +40,15 @@ public class Compra_men extends javax.swing.JPanel {
         // Obtener el modelo de columnas
         TableColumnModel columnModel = jtContenido.getColumnModel();
 
-        // Columna 0: ID → ancho pequeño
-        columnModel.getColumn(0).setPreferredWidth(50);   // ID
-        columnModel.getColumn(0).setMinWidth(50);
-        columnModel.getColumn(0).setMaxWidth(80);
+//        // Columna 0: ID → ancho pequeño
+//        columnModel.getColumn(0).setPreferredWidth(50);   // ID
+//        columnModel.getColumn(0).setMinWidth(50);
+//        columnModel.getColumn(0).setMaxWidth(80);
         
-        // Ocultar la columna "idcategoria"
-        columnModel.getColumn(4).setMinWidth(0);
-        columnModel.getColumn(4).setMaxWidth(0);
-        columnModel.getColumn(4).setWidth(0);
+        // Ocultar la columna "Código"
+        columnModel.getColumn(0).setMinWidth(0);
+        columnModel.getColumn(0).setMaxWidth(0);
+        columnModel.getColumn(0).setWidth(0);
         
 //        // Columna 1: Nombre → más ancha
 //        columnModel.getColumn(1).setPreferredWidth(200);
@@ -64,23 +69,24 @@ public class Compra_men extends javax.swing.JPanel {
         jtContenido = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre", "Precio compra", "Precio venta", "IdCategoria", "Categoría", "Saldo"
+                "Código", "Nit", "Proveedor", "Total", "Fecha"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Float.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -108,6 +114,14 @@ public class Compra_men extends javax.swing.JPanel {
             }
         });
 
+        btnImprimir.setText("Imprimir");
+        btnImprimir.setToolTipText("Imprimir detalle de la compra");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -120,6 +134,8 @@ public class Compra_men extends javax.swing.JPanel {
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnImprimir)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -129,7 +145,8 @@ public class Compra_men extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
-                    .addComponent(btnEditar))
+                    .addComponent(btnEditar)
+                    .addComponent(btnImprimir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -165,22 +182,8 @@ public class Compra_men extends javax.swing.JPanel {
         CompraForm dialog = new CompraForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
-        
-//        // 3. Después de cerrar, verificar si se guardó
-//        if (dialog.isGuardado()) {
-//            String nombre = dialog.getNombreIngresado();
-//            Integer idcategoria = dialog.getIdCategoriaIngresado();
-//            Double precioVta = dialog.getPrecioVtaIngresado();
-//            
-//            // 4. Usar el DAO para insertar
-//            if (compraDAO.insertar(nombre, idcategoria, precioVta)) {
-//                cargarDatos(); // refresca el JTable
-//                JOptionPane.showMessageDialog(this, "✅ Producto agregado con éxito.");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "❌ Error al guardar en la base de datos.");
-//            }
-//        }
-//        // Si fue cancelado, no hace nada
+        // Cargar datos a la tabla del formulario
+        cargarDatos();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -193,11 +196,10 @@ public class Compra_men extends javax.swing.JPanel {
         
         // 2. Obtener datos
         Integer id = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
-        String nombre = (String) jtContenido.getValueAt(filaSeleccionada, 1);
-        Double precioVta = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
-        Integer idcategoria = (Integer) jtContenido.getValueAt(filaSeleccionada, 4); // Obtiene el ID de la categoría (columna oculta)
-        String grupo = (String) jtContenido.getValueAt(filaSeleccionada, 5);
-        
+        Integer nit = (Integer) jtContenido.getValueAt(filaSeleccionada, 1);
+        String proveedor = (String) jtContenido.getValueAt(filaSeleccionada, 2);
+        Double total = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
+                
         // 3. Obtener ventana padre
         Window window = SwingUtilities.getWindowAncestor(this);
         if (!(window instanceof Frame)) {
@@ -206,30 +208,67 @@ public class Compra_men extends javax.swing.JPanel {
         }
         
         // 4. Abrir el diálogo en modo edición
-        var dialog = new CompraForm((Frame) window, true, id, nombre, idcategoria, precioVta);
+        var dialog = new CompraForm((Frame) window, true, id, nit, proveedor, total);
         dialog.setVisible(true); // bloquea hasta que se cierre
 
-        // 5. Si se guardó, actualizar en BD y en tabla
-        if (dialog.isGuardado()) {
-            String nuevoNombre = dialog.getNombreIngresado();
-            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
-            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
-            
-            if (compraDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
-                cargarDatos(); // refresca el JTable
-                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
-            } else {
-                JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
-            }
-            
-            // Opcional: actualizar solo esa celda en la tabla
-            jtContenido.setValueAt(nuevoNombre, filaSeleccionada, 1);
-        }
+//        // 5. Si se guardó, actualizar en BD y en tabla
+//        if (dialog.isGuardado()) {
+//            String nuevoNombre = dialog.getNombreIngresado();
+//            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
+//            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
+//            
+//            if (compraDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
+//                cargarDatos(); // refresca el JTable
+//                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
+//            } else {
+//                JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
+//            }
+//            
+//            // Opcional: actualizar solo esa celda en la tabla
+//            jtContenido.setValueAt(nuevoNombre, filaSeleccionada, 1);
+//        }
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        // En CompraForm.java, después de guardar la compra
+        
+        // 1. Verificar fila seleccionada
+        int filaSeleccionada = jtContenido.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un Producto para editar.");
+            return;
+        }
+        
+        // 2. Obtener datos
+        Integer idCompra = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
+        Integer nit = (Integer) jtContenido.getValueAt(filaSeleccionada, 1);
+        String proveedor = (String) jtContenido.getValueAt(filaSeleccionada, 2);
+        Double total = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
+        Date fecha = (Date) jtContenido.getValueAt(filaSeleccionada, 4);
+        
+        List<CompraItem> items = compraItem.compraItem(idCompra);
+        // Generar PDF
+        String archivoPDF = ReporteCompra.generarPDFCompra(
+            idCompra, nit, proveedor, fecha, total, items
+        );
+        
+        if (archivoPDF == null) {
+            JOptionPane.showMessageDialog(this, "❌ Error al generar el PDF.");
+            return;
+        }
+        
+        // Opción 1: Abrir el PDF (recomendado)
+        try {
+            Desktop.getDesktop().open(new File(archivoPDF));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "✅ Compra guardada. PDF: " + archivoPDF);
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -1,6 +1,7 @@
 package Compras;
 
 import BaseDatos.ConexionMySQL;
+import Proveedor.ProveedorDAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,25 +9,68 @@ import java.util.List;
 // DAO = Data Access Object → patrón común para operaciones de base de datos
 public class CompraDAO {
     private ConexionMySQL conexion;
-
+    private ProveedorDAO proveedorDAO = new ProveedorDAO();
+    
     public CompraDAO() {
         this.conexion = new ConexionMySQL();
     }
-
+    
     /**
      * Insertar una nueva categoría
-     * @param nombre
-     * @param idcategoria
+     * @param nit
+     * @param proveedor
+     * @param fecha
+     * @param total
      * @return 
      */
-    public boolean insertar(String nombre, Integer idcategoria, Double precioVta) {
-        String sql = "INSERT INTO producto (name, idcategoria, precio_venta) VALUES (?, ?, ?)";
+    public Integer insertarCabecera(Integer nit, String proveedor, Date fecha, Double total) {
+        String sql = "INSERT INTO compra (nit, proveedor, fecha, total) VALUES (?, ?, ?, ?)";
+        try (Connection conn = conexion.getConexion();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
+            ps.setInt(1, nit);
+            ps.setString(2, proveedor);
+            ps.setDate(3, new java.sql.Date(fecha.getTime()));
+            ps.setDouble(4, total);
+            ps.executeUpdate();
+            
+            proveedorDAO.guardarProveedor(nit, proveedor);
+            
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Devuelve el ID generado
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * Insertar una nueva categoría
+     * @param idCompra
+     * @param idProducto
+     * @param cantidad
+     * @param precio
+     * @param subTotal
+     * @return 
+     */
+    public boolean insertarItem(Integer idCompra, Integer idProducto, Integer cantidad, Double precio, Double subTotal) {
+        String sql = """
+            INSERT INTO compra_item (idcompra, idproducto, cantidad, precio, subtotal) 
+            VALUES (?, ?, ?, ?, ?)
+            """;
+        
         try (Connection conn = conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, nombre);
-            ps.setInt(2, idcategoria);
-            ps.setDouble(3, precioVta);
+            ps.setInt(1, idCompra);
+            ps.setInt(2, idProducto);
+            ps.setInt(3, cantidad);
+            ps.setDouble(4, precio);
+            ps.setDouble(5, subTotal);
+            
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -36,14 +80,14 @@ public class CompraDAO {
     }
 
     /**
-     * Obtener todas las categorías
+     * Obtener todas las compras
      * @return 
      */
     public List<Compra> listar() {
-        List<Compra> productos = new ArrayList<>();
+        List<Compra> compra = new ArrayList<>();
         String sql = """
-                     SELECT p.id, p.name, p.precio_compra, p.precio_venta, p.idcategoria, c.name as grupo, p.saldo 
-                     FROM producto p INNER JOIN categoria c ON p.idcategoria = c.id""";
+                     SELECT c.id, c.nit, c.proveedor, c.fecha, c.total
+                     FROM compra c""";
         
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -52,23 +96,21 @@ public class CompraDAO {
             while (rs.next()) {
                 Compra c = new Compra();
                 c.setId(rs.getInt("id"));
-//                c.setNombre(rs.getString("name"));
-//                c.setPrecioCompra(rs.getDouble("precio_compra"));
-//                c.setPrecioVenta(rs.getDouble("precio_venta"));
-//                c.setIdCategoria(rs.getInt("idcategoria"));
-//                c.setGrupo(rs.getString("grupo"));
-//                c.setSaldo(rs.getInt("saldo"));
+                c.setNit(rs.getInt("nit"));
+                c.setProveedor(rs.getString("proveedor"));
+                c.setFecha(rs.getDate("fecha"));
+                c.setTotal(rs.getDouble("total"));
                 
-                productos.add(c);
+                compra.add(c);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return productos;
+        return compra;
     }
-
+    
     /**
      * Actualizar una categoría
      * @param id

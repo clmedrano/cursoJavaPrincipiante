@@ -2,10 +2,14 @@ package Compras.detalle;
 
 import Producto.Producto;
 import Producto.ProductoDAO;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public class ListaProductos extends javax.swing.JDialog {
     private ProductoDAO productoDAO = new ProductoDAO();
+    private Integer idProducto_seleccionado;
+    private String nombreProducto_seleccionado;
     
     /**
      * Creates new form ListaProductos
@@ -20,20 +24,50 @@ public class ListaProductos extends javax.swing.JDialog {
         setTitle("LOCALIZADOR DE PRODUCTO");
         
         // Cargar datos a la tabla del formulario
-        cargarDatos();
+        cargarDatos("");
     }
     
-    private void cargarDatos() {
+    private void cargarDatos(String query) {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        //System.out.println("-->> "+productoDAO.listar().size());
-        for (Producto c : productoDAO.listar()) { // ← modelo.Categoria
+        for (Producto c : productoDAO.listar(query)) { // ← modelo.Categoria
 //            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
-            modelo.addRow(new Object[]{c.getId()});
+            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra()});
         }
-//        ajustarAnchoColumnas();
+        ajustarAnchoColumnas();
     }
+    private void ajustarAnchoColumnas() {
+        // Obtener el modelo de columnas
+        TableColumnModel columnModel = jtContenido.getColumnModel();
+        
+        // Ocultar la columna "id"
+        columnModel.getColumn(0).setPreferredWidth(0);   // ID
+        columnModel.getColumn(0).setMinWidth(0);
+        columnModel.getColumn(0).setMaxWidth(0);
+        
+        // Columna 0: Precio Referencial → ancho
+        columnModel.getColumn(2).setMinWidth(50);
+        columnModel.getColumn(2).setMaxWidth(80);
+        columnModel.getColumn(2).setWidth(50);
+    }
+    private void seleccionarFila(int fila) {
+        if (fila >= 0) {
+            // Obtener datos de la fila seleccionada
+            Integer id = (Integer) jtContenido.getValueAt(fila, 0);
+            String nombre = (String) jtContenido.getValueAt(fila, 1);
+            
+            idProducto_seleccionado = id;
+            nombreProducto_seleccionado = nombre;
+        }
+    }
+    public Integer getIdProducto() {
+        return idProducto_seleccionado;
+    }
+    public String getNombreProducto() {
+        return nombreProducto_seleccionado;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,18 +91,19 @@ public class ListaProductos extends javax.swing.JDialog {
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Nombre producto", "Precio referencia"
+                "Código", "Nombre producto", "Precio Refencial"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                true, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -79,32 +114,52 @@ public class ListaProductos extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jtContenido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtContenidoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtContenido);
+
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
 
         jLabel1.setText("Buscar");
 
         btnSeleccionar.setText("Seleccionar");
+        btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-                            .addComponent(jLabel1)
-                            .addComponent(txtBuscar)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(btnSeleccionar, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtBuscar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 67, Short.MAX_VALUE)
+                .addComponent(btnSeleccionar, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,12 +169,12 @@ public class ListaProductos extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(btnSeleccionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSeleccionar))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -142,6 +197,31 @@ public class ListaProductos extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        String query = txtBuscar.getText();
+        
+        // Cargar productos
+        cargarDatos(query);
+    }//GEN-LAST:event_txtBuscarKeyReleased
+    
+    private void jtContenidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtContenidoMouseClicked
+        if (evt.getClickCount() == 2) { // Doble clic
+            int fila = jtContenido.rowAtPoint(evt.getPoint());
+            seleccionarFila(fila);
+            dispose(); // cerrar formulario
+        }
+    }//GEN-LAST:event_jtContenidoMouseClicked
+
+    private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        int filaSeleccionada = jtContenido.getSelectedRow();
+        seleccionarFila(filaSeleccionada);
+        dispose(); // cerrar formulario
+    }//GEN-LAST:event_btnSeleccionarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        dispose(); // cerrar formulario
+    }//GEN-LAST:event_btnCancelarActionPerformed
+    
     /**
      * @param args the command line arguments
      */

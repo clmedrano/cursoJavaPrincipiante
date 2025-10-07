@@ -52,6 +52,8 @@
                           <Component id="btnNuevo" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnEditar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnImprimir" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -66,6 +68,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnNuevo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnEditar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnImprimir" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="295" max="-2" attributes="0"/>
@@ -85,14 +88,12 @@
             <Component class="javax.swing.JTable" name="jtContenido">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="7" rowCount="2">
+                  <Table columnCount="5" rowCount="2">
                     <Column editable="false" title="C&#xf3;digo" type="java.lang.Integer"/>
-                    <Column editable="false" title="Nombre" type="java.lang.String"/>
-                    <Column editable="false" title="Precio compra" type="java.lang.Double"/>
-                    <Column editable="false" title="Precio venta" type="java.lang.Float"/>
-                    <Column editable="false" title="IdCategoria" type="java.lang.Integer"/>
-                    <Column editable="false" title="Categor&#xed;a" type="java.lang.String"/>
-                    <Column editable="false" title="Saldo" type="java.lang.Integer"/>
+                    <Column editable="false" title="Nit" type="java.lang.String"/>
+                    <Column editable="false" title="Proveedor" type="java.lang.String"/>
+                    <Column editable="false" title="Total" type="java.lang.Double"/>
+                    <Column editable="false" title="Fecha" type="java.lang.String"/>
                   </Table>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -114,6 +115,15 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditarActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnImprimir">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Imprimir"/>
+            <Property name="toolTipText" type="java.lang.String" value="Imprimir detalle de la compra"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImprimirActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
