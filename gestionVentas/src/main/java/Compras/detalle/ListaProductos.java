@@ -2,7 +2,6 @@ package Compras.detalle;
 
 import Producto.Producto;
 import Producto.ProductoDAO;
-import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -32,7 +31,6 @@ public class ListaProductos extends javax.swing.JDialog {
         modelo.setRowCount(0);
         
         for (Producto c : productoDAO.listar(query)) { // ← modelo.Categoria
-//            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra(), c.getPrecioVenta(), c.getIdCategoria(), c.getGrupo(), c.getSaldo()});
             modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra()});
         }
         ajustarAnchoColumnas();

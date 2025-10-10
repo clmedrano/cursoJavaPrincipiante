@@ -154,4 +154,33 @@ public class CompraDAO {
             return false;
         }
     }
+    
+    public Compra obtenerCompraPorId(Integer idCompra) {
+        String sql = """
+            SELECT id, nit, proveedor, fecha, total 
+            FROM compra 
+            WHERE id = ?
+            """;
+
+        try (Connection conn = conexion.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCompra);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Compra compra = new Compra();
+                    compra.setId(rs.getInt("id"));
+                    compra.setNit(rs.getInt("nit"));
+                    compra.setProveedor(rs.getString("proveedor"));
+                    compra.setFecha(rs.getDate("fecha"));
+                    compra.setTotal(rs.getDouble("total"));
+                    return compra;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // No encontrada
+    }
 }

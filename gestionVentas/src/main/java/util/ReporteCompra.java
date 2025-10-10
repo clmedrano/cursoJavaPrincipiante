@@ -6,10 +6,9 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.TextAlignment;
+import java.io.File;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ReporteCompra {
@@ -22,11 +21,19 @@ public class ReporteCompra {
             Double total,
             List<CompraItem> items) {
         
-        // Nombre del archivo
+        // ✅ Ruta completa del archivo
         String nombreArchivo = "compra_" + idCompra + ".pdf";
         
+        String carpetaReportes = System.getProperty("user.home") + File.separator + "Documentos" + File.separator + "Reportes_UBI";
+        File carpeta = new File(carpetaReportes);
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+        String rutaCompleta = carpetaReportes + File.separator + nombreArchivo;
+        System.out.println("Ruta completa del PDF: " + rutaCompleta);
+        
         try {
-            PdfWriter writer = new PdfWriter(nombreArchivo);
+            PdfWriter writer = new PdfWriter(rutaCompleta);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             
@@ -90,7 +97,7 @@ public class ReporteCompra {
             document.add(totalFinal);
             
             document.close();
-            return nombreArchivo;
+            return rutaCompleta;
             
         } catch (FileNotFoundException e) {
             e.printStackTrace();

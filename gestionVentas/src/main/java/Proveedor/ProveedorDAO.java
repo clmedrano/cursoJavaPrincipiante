@@ -14,6 +14,8 @@ public class ProveedorDAO {
 
     /**
      * Guarda o actualiza un proveedor por NIT
+     * @param nit
+     * @param nombre
      * @return true si se guardó/actualizó correctamente
      */
     public boolean guardarProveedor(Integer nit, String nombre) {

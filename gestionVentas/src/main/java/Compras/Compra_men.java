@@ -182,6 +182,11 @@ public class Compra_men extends javax.swing.JPanel {
         CompraForm dialog = new CompraForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
+        // Recuperar el ID de la última compra
+        Integer idCompra = dialog.idproducto_recuperar;
+//        System.out.println("ID compra recuperado: " + idCompra);
+        imprimirCompra(idCompra);
+        
         // Cargar datos a la tabla del formulario
         cargarDatos();
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -230,26 +235,42 @@ public class Compra_men extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        // En CompraForm.java, después de guardar la compra
-        
         // 1. Verificar fila seleccionada
         int filaSeleccionada = jtContenido.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un Producto para editar.");
+            JOptionPane.showMessageDialog(this, "Selecciona alguna compra para Imprimir. ");
             return;
         }
         
-        // 2. Obtener datos
         Integer idCompra = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
-        Integer nit = (Integer) jtContenido.getValueAt(filaSeleccionada, 1);
-        String proveedor = (String) jtContenido.getValueAt(filaSeleccionada, 2);
-        Double total = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
-        Date fecha = (Date) jtContenido.getValueAt(filaSeleccionada, 4);
+        imprimirCompra(idCompra);
+    }//GEN-LAST:event_btnImprimirActionPerformed
+    
+    private void imprimirCompra(Integer idCompra) {
+        // 1. Obtener la cabecera de la compra
+        Compra compra = compraDAO.obtenerCompraPorId(idCompra);
         
+        if (compra == null) {
+            JOptionPane.showMessageDialog(this, "❌ No se encontró la compra con ID: " + idCompra);
+            return;
+        }
+        
+        // 2. Obtener los ítems
         List<CompraItem> items = compraItem.compraItem(idCompra);
-        // Generar PDF
+        
+        if (items.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "❌ No se encontraron ítems para esta compra.");
+            return;
+        }
+        
+        // 3. Generar PDF
         String archivoPDF = ReporteCompra.generarPDFCompra(
-            idCompra, nit, proveedor, fecha, total, items
+            compra.getId(),
+            compra.getNit(),
+            compra.getProveedor(),
+            compra.getFecha(), // java.sql.Date → se convierte automáticamente
+            compra.getTotal(),
+            items
         );
         
         if (archivoPDF == null) {
@@ -257,14 +278,13 @@ public class Compra_men extends javax.swing.JPanel {
             return;
         }
         
-        // Opción 1: Abrir el PDF (recomendado)
+        // 4. Abrir el PDF
         try {
             Desktop.getDesktop().open(new File(archivoPDF));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "✅ Compra guardada. PDF: " + archivoPDF);
+            JOptionPane.showMessageDialog(this, "✅ PDF generado: " + archivoPDF);
         }
-    }//GEN-LAST:event_btnImprimirActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;

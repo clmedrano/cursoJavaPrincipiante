@@ -1,35 +1,24 @@
 package Compras;
 
-import Producto.*;
-import Categoria.*;
 import Compras.detalle.CompraItem;
 import Compras.detalle.ListaProductos;
 import java.awt.Frame;
 import java.awt.Window;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import util.VistaUtil;
 
-public class CompraForm extends javax.swing.JDialog {
-    // Variables de instancia
-    private Integer id;           // para saber qué registro editar
-    private String nombreIngresado = null;
-    private Double precioVenta_Ingresad = null;
-    private Integer idcategoria_Ingresado = null;
-    private boolean guardado = false;
-    
+public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     private VistaUtil vista = new VistaUtil();
     private CompraDAO compraDAO = new CompraDAO();
     private CompraItem compraItem = new CompraItem();
     // Variables globales
+    public Integer idproducto_recuperar; // Esta variable es lo que voy a recuperar desde el formulario "Compra_men.java"
     private Integer idProducto;
     private String nombreProducto;
     
@@ -69,8 +58,6 @@ public class CompraForm extends javax.swing.JDialog {
         // Posicionar en el centro de lapantalla
         this.setLocationRelativeTo(this);
         
-        // Editar Registro
-        this.id = id;
         setTitle("Editar compra");
         
         // Cargar los datos a sus respectivos campos
@@ -88,21 +75,6 @@ public class CompraForm extends javax.swing.JDialog {
         }
 //        ajustarAnchoColumnas();
     }
-        
-//    // Método para obtener la variable ingresada en los campos del formulario
-//    public String getNombreIngresado() {
-//        return nombreIngresado;
-//    }
-//    public Integer getIdCategoriaIngresado() {
-//        return idcategoria_Ingresado;
-//    }
-//    public Double getPrecioVtaIngresado() {
-//        return precioVenta_Ingresad;
-//    }
-//    // Método para saber si se guardó
-//    public boolean isGuardado() {
-//        return guardado;
-//    }
     
     private Integer parsearNit(String texto)
     {
@@ -175,6 +147,12 @@ public class CompraForm extends javax.swing.JDialog {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel4.setText("NIT/CI:");
+
+        txtNit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNitKeyReleased(evt);
+            }
+        });
 
         jtContenido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -361,6 +339,7 @@ public class CompraForm extends javax.swing.JDialog {
             return;
         }
         
+        idproducto_recuperar = idCompra;
         // 4. Guardar detalles
         for (CompraItem item : items) {
             if (!compraDAO.insertarItem(idCompra, item.getIdProducto(), item.getCantidad(), item.getPrecio(), item.getSubTotal())) {
@@ -443,6 +422,13 @@ public class CompraForm extends javax.swing.JDialog {
         // Actualizar total
 //        calcularTotal();
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void txtNitKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNitKeyReleased
+//        String nit = txtNit.getText();
+        
+        // Buscar provedor en base al NIT y recuperar el nombre, esto para evitar que se vuelva a escribir el nombre completo
+        
+    }//GEN-LAST:event_txtNitKeyReleased
     
     // PASO 5: Método para calcular total (opcional)
     private void calcularTotal() {
