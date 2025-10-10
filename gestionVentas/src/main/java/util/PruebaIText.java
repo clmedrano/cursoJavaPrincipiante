@@ -14,7 +14,7 @@ public class PruebaIText {
             Document document = new Document(pdf);
             document.add(new Paragraph("iText 7 funciona correctamente"));
             document.close();
-            System.out.println("✅ PDF generado con éxito");
+            System.out.println("PDF generado con éxito");
         } catch (Exception e) {
             e.printStackTrace();
         }
