@@ -1,17 +1,19 @@
 package Proveedor;
 
 import BaseDatos.ConexionMySQL;
+import Compras.Compra;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProveedorDAO {
     private ConexionMySQL conexion;
-
+    
     public ProveedorDAO() {
         this.conexion = new ConexionMySQL();
     }
-
+    
     /**
      * Guarda o actualiza un proveedor por NIT
      * @param nit
@@ -26,7 +28,7 @@ public class ProveedorDAO {
         // Si no existe, insertamos
         return insertarProveedor(nit, nombre);
     }
-
+    
     private boolean actualizarProveedor(Integer nit, String nombre) {
         String sql = "UPDATE proveedor SET nombre = ? WHERE nit = ?";
         try (Connection conn = conexion.getConexion();
@@ -39,7 +41,7 @@ public class ProveedorDAO {
             return false;
         }
     }
-
+    
     private boolean insertarProveedor(Integer nit, String nombre) {
         String sql = "INSERT INTO proveedor (nit, nombre) VALUES (?, ?)";
         try (Connection conn = conexion.getConexion();
@@ -56,4 +58,33 @@ public class ProveedorDAO {
             return false;
         }
     }
+    
+    /**
+    * Obtiene el nombre del proveedor dado su NIT.
+    * 
+    * @param nit NIT del proveedor a buscar
+    * @return Nombre del proveedor si existe, null si no se encuentra
+    */
+    public String obtenerNombreProveedorPorNit(Integer nit) {
+        if (nit == null) {
+           return null;
+        }
+        
+        String sql = "SELECT nombre FROM proveedor WHERE nit = ?";
+        
+        try (Connection conn = conexion.getConexion();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, nit);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("nombre");
+                }
+            }
+        } catch (SQLException e) {
+           e.printStackTrace();
+        }
+        return null; // No encontrado o error
+   }
 }

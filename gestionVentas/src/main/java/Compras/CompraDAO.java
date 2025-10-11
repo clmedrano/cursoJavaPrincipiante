@@ -163,10 +163,10 @@ public class CompraDAO {
             """;
 
         try (Connection conn = conexion.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            
             ps.setInt(1, idCompra);
-
+            
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Compra compra = new Compra();

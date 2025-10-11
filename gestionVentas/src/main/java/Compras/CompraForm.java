@@ -2,6 +2,7 @@ package Compras;
 
 import Compras.detalle.CompraItem;
 import Compras.detalle.ListaProductos;
+import Proveedor.ProveedorDAO;
 import java.awt.Frame;
 import java.awt.Window;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import util.VistaUtil;
 public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     private VistaUtil vista = new VistaUtil();
     private CompraDAO compraDAO = new CompraDAO();
+    private ProveedorDAO proveedorDAO = new ProveedorDAO();
     private CompraItem compraItem = new CompraItem();
     // Variables globales
     public Integer idproducto_recuperar; // Esta variable es lo que voy a recuperar desde el formulario "Compra_men.java"
@@ -424,10 +426,12 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void txtNitKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNitKeyReleased
-//        String nit = txtNit.getText();
+        Integer nit = parsearNit(txtNit.getText());
         
-        // Buscar provedor en base al NIT y recuperar el nombre, esto para evitar que se vuelva a escribir el nombre completo
-        
+        String nombreProveedor = proveedorDAO.obtenerNombreProveedorPorNit(nit);
+        if(nombreProveedor != null) {
+            System.out.println("-->> " + nombreProveedor);
+        }
     }//GEN-LAST:event_txtNitKeyReleased
     
     // PASO 5: Método para calcular total (opcional)
