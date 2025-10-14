@@ -43,9 +43,14 @@ public class ProveedorDAO {
     }
     
     private boolean insertarProveedor(Integer nit, String nombre) {
+        String nombreProveedor = obtenerNombreProveedorPorNit(nit);
+        if(nombreProveedor != null) {
+            return false;
+        }
+        
         String sql = "INSERT INTO proveedor (nit, nombre) VALUES (?, ?)";
         try (Connection conn = conexion.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+            PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, nit);
             ps.setString(2, nombre);
             return ps.executeUpdate() > 0;

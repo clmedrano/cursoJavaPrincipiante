@@ -1,7 +1,10 @@
 package util;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,5 +39,9 @@ public class VistaUtil {
             txtElemento.requestFocus();
             return 0.0;
         }
+    }
+    public void cargarIMG(JLabel jLabelIcon, String icono) {
+        String ruta = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + "icons" + File.separator + icono;
+        jLabelIcon.setIcon(new ImageIcon(ruta));
     }
 }

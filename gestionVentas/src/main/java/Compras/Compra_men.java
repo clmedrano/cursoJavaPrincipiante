@@ -7,7 +7,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.Frame;
 import java.awt.Window;
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -182,13 +181,15 @@ public class Compra_men extends javax.swing.JPanel {
         CompraForm dialog = new CompraForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
-        // Recuperar el ID de la última compra
-        Integer idCompra = dialog.idproducto_recuperar;
-//        System.out.println("ID compra recuperado: " + idCompra);
-        imprimirCompra(idCompra);
-        
-        // Cargar datos a la tabla del formulario
-        cargarDatos();
+        if(dialog.idproducto_recuperar != null) {
+            // Recuperar el ID de la última compra
+            Integer idCompra = dialog.idproducto_recuperar;
+            // System.out.println("ID compra recuperado: " + idCompra);
+            imprimirCompra(idCompra);
+            
+            // Cargar datos a la tabla del formulario
+            cargarDatos();
+        }
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed

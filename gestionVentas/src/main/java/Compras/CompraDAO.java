@@ -23,8 +23,8 @@ public class CompraDAO {
      * @param total
      * @return 
      */
-    public Integer insertarCabecera(Integer nit, String proveedor, Date fecha, Double total) {
-        String sql = "INSERT INTO compra (nit, proveedor, fecha, total) VALUES (?, ?, ?, ?)";
+    public Integer insertarCabecera(Integer nit, String proveedor, Date fecha, Double total, String descripcion) {
+        String sql = "INSERT INTO compra (nit, proveedor, fecha, total, descripcion) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -32,6 +32,7 @@ public class CompraDAO {
             ps.setString(2, proveedor);
             ps.setDate(3, new java.sql.Date(fecha.getTime()));
             ps.setDouble(4, total);
+            ps.setString(5, descripcion);
             ps.executeUpdate();
             
             proveedorDAO.guardarProveedor(nit, proveedor);

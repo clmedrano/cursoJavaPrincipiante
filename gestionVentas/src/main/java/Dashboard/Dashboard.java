@@ -3,6 +3,7 @@ package Dashboard;
 import Categoria.Categoria_men;
 import Producto.Producto_men;
 import Compras.Compra_men;
+import javax.swing.JFrame;
 import util.VistaUtil;
 
 public class Dashboard extends javax.swing.JFrame {
@@ -15,7 +16,15 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         
         // Posicionar en el centro de lapantalla
-        this.setLocationRelativeTo(this);
+        this.setLocationRelativeTo(null);
+        setTitle("Menú principal");
+    }
+    public Dashboard(String usuario) {
+        initComponents();
+        setTitle("Usuario: " + usuario);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Cierra la aplicación al cerrar
+//        setSize(800, 600);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -36,6 +45,8 @@ public class Dashboard extends javax.swing.JFrame {
         btnCategorias = new javax.swing.JButton();
         btnCompras = new javax.swing.JButton();
         btnProductos = new javax.swing.JButton();
+        btnVentas = new javax.swing.JButton();
+        btnMovimientos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,24 +129,48 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        btnVentas.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnVentas.setForeground(new java.awt.Color(0, 102, 255));
+        btnVentas.setText("Ventas");
+        btnVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVentasActionPerformed(evt);
+            }
+        });
+
+        btnMovimientos.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnMovimientos.setForeground(new java.awt.Color(0, 102, 255));
+        btnMovimientos.setText("Imprimir Movimientos");
+        btnMovimientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMovimientosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpMenuLayout = new javax.swing.GroupLayout(jpMenu);
         jpMenu.setLayout(jpMenuLayout);
         jpMenuLayout.setHorizontalGroup(
             jpMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCompras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnCategorias, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+            .addComponent(btnVentas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCompras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMovimientos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jpMenuLayout.setVerticalGroup(
             jpMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpMenuLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addContainerGap()
                 .addComponent(btnCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(btnProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(207, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMovimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,8 +223,16 @@ public class Dashboard extends javax.swing.JFrame {
         Compra_men form = new Compra_men();
         
         vista.showPanel(form, jpContenedor);
-        lblTexto.setText("LISTA DE COMPRAS ");
+        lblTexto.setText("LISTA DE COMPRAS");
     }//GEN-LAST:event_btnComprasActionPerformed
+
+    private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
+        lblTexto.setText("LISTA DE VENTAS (Falta...)");
+    }//GEN-LAST:event_btnVentasActionPerformed
+
+    private void btnMovimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovimientosActionPerformed
+        lblTexto.setText("Aquí debe imprimir los movimientos en almacén de un PRODUCTO (Falta...)");
+    }//GEN-LAST:event_btnMovimientosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -230,7 +273,9 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCategorias;
     private javax.swing.JButton btnCompras;
+    private javax.swing.JButton btnMovimientos;
     private javax.swing.JButton btnProductos;
+    private javax.swing.JButton btnVentas;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jpCabecera;
     private javax.swing.JPanel jpContenedor;

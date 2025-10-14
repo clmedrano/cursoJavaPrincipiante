@@ -9,6 +9,7 @@ public class ListaProductos extends javax.swing.JDialog {
     private ProductoDAO productoDAO = new ProductoDAO();
     private Integer idProducto_seleccionado;
     private String nombreProducto_seleccionado;
+    private Double precio_compra_seleccionado;
     
     /**
      * Creates new form ListaProductos
@@ -54,9 +55,11 @@ public class ListaProductos extends javax.swing.JDialog {
             // Obtener datos de la fila seleccionada
             Integer id = (Integer) jtContenido.getValueAt(fila, 0);
             String nombre = (String) jtContenido.getValueAt(fila, 1);
+            Double precioCompra = (Double) jtContenido.getValueAt(fila, 2);
             
             idProducto_seleccionado = id;
             nombreProducto_seleccionado = nombre;
+            precio_compra_seleccionado = precioCompra;
         }
     }
     public Integer getIdProducto() {
@@ -64,6 +67,9 @@ public class ListaProductos extends javax.swing.JDialog {
     }
     public String getNombreProducto() {
         return nombreProducto_seleccionado;
+    }
+    public Double getPrecio_compra() {
+        return precio_compra_seleccionado;
     }
     
     /**

@@ -123,7 +123,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         btnAgregar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        taDescripcion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -194,9 +194,9 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
 
         jLabel6.setText("Descripción:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        taDescripcion.setColumns(20);
+        taDescripcion.setRows(5);
+        jScrollPane2.setViewportView(taDescripcion);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -316,6 +316,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         // OBTENER LOS DATOS DE LA CABECERA ( tabla: compra )
         Integer nit = parsearNit(txtNit.getText());
         String proveedor = txtProveedor.getText();
+        String descripcion = taDescripcion.getText();
         if (nit == null) {
             txtNit.requestFocus();
             return; // No continuar
@@ -335,7 +336,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         Double total = items.stream().mapToDouble(CompraItem::getSubTotal).sum();
         
         // 3. Guardar cabecera
-        Integer idCompra = compraDAO.insertarCabecera(nit, proveedor, new java.sql.Date(System.currentTimeMillis()), total);
+        Integer idCompra = compraDAO.insertarCabecera(nit, proveedor, new java.sql.Date(System.currentTimeMillis()), total, descripcion);
         if (idCompra == null) {
             JOptionPane.showMessageDialog(this, "❌ Error al crear la compra.");
             return;
@@ -377,11 +378,15 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
                 1. idproducto
                 2. nombreProducto
         */
-        idProducto = dialog.getIdProducto();
-        nombreProducto = dialog.getNombreProducto();
-        
-        txtProducto.setText(nombreProducto);
-        txtCantidad.requestFocus(); // Establece el foco en el campo cantidad
+        if(dialog.getIdProducto() != null) {
+            idProducto = dialog.getIdProducto();
+            nombreProducto = dialog.getNombreProducto();
+            Double precioCompra = dialog.getPrecio_compra();
+
+            txtProducto.setText(nombreProducto);
+            txtPrecio.setText(precioCompra.toString());
+            txtCantidad.requestFocus(); // Establece el foco en el campo cantidad
+        }
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -430,7 +435,9 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         
         String nombreProveedor = proveedorDAO.obtenerNombreProveedorPorNit(nit);
         if(nombreProveedor != null) {
-            System.out.println("-->> " + nombreProveedor);
+            txtProveedor.setText(nombreProveedor);
+        } else {
+            txtProveedor.setText("");
         }
     }//GEN-LAST:event_txtNitKeyReleased
     
@@ -503,8 +510,8 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTable jtContenido;
+    private javax.swing.JTextArea taDescripcion;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtNit;
     private javax.swing.JTextField txtPrecio;
