@@ -1,5 +1,6 @@
 Compras\CompraForm$5.class
 Compras\detalle\ListaProductos$5.class
+Login\Login$3$1.class
 Producto\Producto_men$2.class
 Dashboard\Dashboard.class
 Dashboard\Dashboard$1.class
@@ -9,6 +10,8 @@ util\PruebaIText.class
 Compras\CompraForm$2.class
 Compras\Compra_men$2.class
 Producto\Producto.class
+Dashboard\Dashboard$5.class
+Login\Login$1.class
 Categoria\CategoriaForm$1.class
 Producto\ProductoForm.class
 Producto\ProductoForm$1.class
@@ -16,9 +19,11 @@ Producto\Producto_men$3.class
 Compras\detalle\ListaProductos.class
 Compras\CompraForm$6.class
 Compras\detalle\ListaProductos$1.class
+Login\Login$2.class
 com\mycompany\gestionventas\GestionVentas.class
 util\VistaUtil.class
 Compras\Compra_men$1.class
+Login\Usuario.class
 Producto\ProductoForm$2.class
 Compras\detalle\ListaProductos$4.class
 Categoria\CategoriaForm$2.class
@@ -26,9 +31,11 @@ Compras\CompraForm$3.class
 Categoria\Categoria.class
 Dashboard\Dashboard$4.class
 Compras\CompraDAO.class
+Login\Login.class
 Categoria\Categoria_men$3.class
 Categoria\CategoriaDAO.class
 Compras\detalle\ListaProductos$6$1.class
+Dashboard\Dashboard$6.class
 Producto\ProductoForm$3$1.class
 Producto\ProductoForm$3.class
 Producto\Producto_men.class
@@ -49,6 +56,8 @@ Compras\Compra_men$3.class
 Producto\Producto_men$1.class
 Producto\ProductoDAO.class
 Compras\CompraForm$1.class
+Login\UsuarioDAO.class
+Login\Login$3.class
 Categoria\CategoriaForm$3$1.class
 Dashboard\Dashboard$2.class
 Compras\Compra.class

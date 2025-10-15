@@ -24,6 +24,8 @@ public class ReporteCompra {
         // ✅ Ruta completa del archivo
         String nombreArchivo = "compra_" + idCompra + ".pdf";
         
+        // C:\Users\hp\Documentos\Reportes_UBI\compra_1.pdf
+        // C:/Users/hp/Documentos/Reportes_UBI\compra_1.pdf
         String carpetaReportes = System.getProperty("user.home") + File.separator + "Documentos" + File.separator + "Reportes_UBI";
         File carpeta = new File(carpetaReportes);
         if (!carpeta.exists()) {

@@ -1,10 +1,12 @@
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\CategoriaForm.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Usuario.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Compra_men.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\BaseDatos\ConexionMySQL.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria_men.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoForm.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\detalle\CompraItem.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Login.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\util\VistaUtil.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Dashboard\Dashboard.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\util\PruebaIText.java
@@ -14,6 +16,7 @@ D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoDAO.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\com\mycompany\gestionventas\GestionVentas.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto_men.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\UsuarioDAO.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\CompraDAO.java
 D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Proveedor\ProveedorDAO.java
