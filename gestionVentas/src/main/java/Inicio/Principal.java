@@ -1,14 +1,10 @@
-package com.mycompany.gestionventas;
+package Inicio;
 
 import Dashboard.Dashboard;
 import Login.Login;
-import java.awt.Frame;
-import static java.awt.SystemColor.window;
-import java.awt.Window;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-public class GestionVentas {
+public class Principal {
 
     public static void main(String[] args) {
         //System.out.println("Hello World!");
