@@ -3,6 +3,7 @@ package Dashboard;
 import Categoria.Categoria_men;
 import Producto.Producto_men;
 import Compras.Compra_men;
+import Ventas.Venta_men;
 import javax.swing.JFrame;
 import util.VistaUtil;
 
@@ -227,7 +228,10 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnComprasActionPerformed
 
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
-        lblTexto.setText("LISTA DE VENTAS (Falta...)");
+        Venta_men form = new Venta_men();
+        
+        vista.showPanel(form, jpContenedor);
+        lblTexto.setText("LISTA DE VENTAS");
     }//GEN-LAST:event_btnVentasActionPerformed
 
     private void btnMovimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovimientosActionPerformed

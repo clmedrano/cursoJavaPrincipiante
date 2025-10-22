@@ -1,4 +1,4 @@
-package Compras.detalle;
+package Compras.Item;
 
 import BaseDatos.ConexionMySQL;
 import java.sql.Connection;

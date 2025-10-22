@@ -1,9 +1,9 @@
-package Compras;
+package Ventas;
 
-import Compras.Item.CompraItem;
-import Compras.Item.ListaProductos;
 import Movimientos_Items.MovimientosDAO;
-import Proveedor_Cliente.ProveedorDAO;
+import Proveedor_Cliente.ClienteDAO;
+import Ventas.Item.ListaProductos_vta;
+import Ventas.Item.VentaItem;
 import java.awt.Frame;
 import java.awt.Window;
 import java.util.ArrayList;
@@ -15,31 +15,31 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import util.VistaUtil;
 
-public class CompraForm extends javax.swing.JDialog { // Variables de instancia
+public class VentaForm extends javax.swing.JDialog { // Variables de instancia
     private VistaUtil vista = new VistaUtil();
-    private CompraDAO compraDAO = new CompraDAO();
-    private ProveedorDAO proveedorDAO = new ProveedorDAO();
-    private CompraItem compraItem = new CompraItem();
+    private VentaDAO ventaDAO = new VentaDAO();
+    private ClienteDAO clienteDAO = new ClienteDAO();
+    private VentaItem ventaItem = new VentaItem();
     private MovimientosDAO movimientosDAO = new MovimientosDAO();
     // Variables globales
-    public Integer idproducto_recuperar; // Esta variable es lo que voy a recuperar desde el formulario "Compra_men.java"
+    public Integer idproducto_recuperar; // Esta variable es lo que voy a recuperar desde el formulario "Venta_men.java"
     private Integer idProducto;
     private String nombreProducto;
     
     private Map<String, Integer> mapaCategoria = new HashMap<>();
     
     // PASO 2: Declara una lista como variable de instancia
-    private List<CompraItem> items = new ArrayList<>();
+    private List<VentaItem> items = new ArrayList<>();
     private DefaultTableModel modeloTabla;
     
-    public CompraForm(java.awt.Frame parent, boolean modal) {
+    public VentaForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         
         // Posicionar en el centro de lapantalla
         this.setLocationRelativeTo(this);
         
-        setTitle("Nueva compra");
+        setTitle("Nueva venta");
         
         // PASO 3: Inicializa el modelo de la tabla una sola vez
         modeloTabla = new DefaultTableModel(new Object[]{"ID", "Producto", "Cantidad", "Precio", "SubTotal"}, 0) {
@@ -55,18 +55,18 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     }
     
     // Constructor con datos (para edición)
-    public CompraForm(java.awt.Frame parent, boolean modal, Integer id, Integer nit, String proveedor, Double total) {
+    public VentaForm(java.awt.Frame parent, boolean modal, Integer id, Integer nit, String proveedor, Double total) {
         super(parent, modal);
         initComponents();
         
         // Posicionar en el centro de lapantalla
         this.setLocationRelativeTo(this);
         
-        setTitle("Editar compra");
+        setTitle("Editar venta");
         
         // Cargar los datos a sus respectivos campos
         txtNit.setText(nit.toString());
-        txtProveedor.setText(proveedor);
+        txtCliente.setText(proveedor);
 //        txtProveedor.setText(String.valueOf(precioVenta));
         cargarItem();
     }
@@ -74,8 +74,8 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        for (CompraItem c : compraItem.compraItem(0)) {
-            modelo.addRow(new Object[]{c.getIdcompra(), c.getNombreProducto(), c.getCantidad(), c.getPrecio(), c.getSubTotal()});
+        for (VentaItem c : ventaItem.ventaItem(0)) {
+            modelo.addRow(new Object[]{c.getIdventa(), c.getNombreProducto(), c.getCantidad(), c.getPrecio(), c.getSubTotal()});
         }
 //        ajustarAnchoColumnas();
     }
@@ -107,7 +107,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         jProgressBar1 = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtProveedor = new javax.swing.JTextField();
+        txtCliente = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -132,7 +132,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setDoubleBuffered(false);
 
-        jLabel1.setText("Proveedor:");
+        jLabel1.setText("Cliente:");
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -185,7 +185,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
 
         jLabel3.setText("Cantidad");
 
-        jLabel5.setText("Precio compra");
+        jLabel5.setText("Precio venta");
 
         btnAgregar.setText("Agregar");
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -212,7 +212,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4)
-                    .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                     .addComponent(jLabel6)
                     .addComponent(jScrollPane2)
                     .addComponent(txtNit)
@@ -259,7 +259,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -315,16 +315,16 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // OBTENER LOS DATOS DE LA CABECERA ( tabla: compra )
+        // OBTENER LOS DATOS DE LA CABECERA ( tabla: venta )
         Integer nit = parsearNit(txtNit.getText());
-        String proveedor = txtProveedor.getText();
+        String cliente = txtCliente.getText();
         String descripcion = taDescripcion.getText();
         if (nit == null) {
             txtNit.requestFocus();
             return; // No continuar
         }
-        if(proveedor.isEmpty()) {
-            txtProveedor.requestFocus();
+        if(cliente.isEmpty()) {
+            txtCliente.requestFocus();
             return; // No continuar
         }
         
@@ -335,35 +335,35 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         }
         
         // 2. Calcular total
-        Double total = items.stream().mapToDouble(CompraItem::getSubTotal).sum();
+        Double total = items.stream().mapToDouble(VentaItem::getSubTotal).sum();
         
         // 3. Guardar cabecera
-        Integer idCompra = compraDAO.insertarCabecera(nit, proveedor, new java.sql.Date(System.currentTimeMillis()), total, descripcion);
-        if (idCompra == null) {
-            JOptionPane.showMessageDialog(this, "❌ Error al crear la compra.");
+        Integer idVenta = ventaDAO.insertarCabecera(nit, cliente, new java.sql.Date(System.currentTimeMillis()), total, descripcion);
+        if (idVenta == null) {
+            JOptionPane.showMessageDialog(this, "❌ Error al crear la venta.");
             return;
         }
         
-        idproducto_recuperar = idCompra;
+        idproducto_recuperar = idVenta;
         // 4. Guardar detalles
-        for (CompraItem item : items) {
-            if (!compraDAO.insertarItem(idCompra, item.getIdProducto(), item.getCantidad(), item.getPrecio(), item.getSubTotal())) {
+        for (VentaItem item : items) {
+            if (!ventaDAO.insertarItem(idVenta, item.getIdProducto(), item.getCantidad(), item.getPrecio(), item.getSubTotal())) {
                 JOptionPane.showMessageDialog(this, "❌ Error al guardar el producto: " + item.getNombreProducto());
                 return;
             }
-            String dsc = "".equals(descripcion)? "Compra #" + idCompra + " - " + proveedor : descripcion;
+            String dsc = "".equals(descripcion)? "Venta #" + idVenta + " - " + cliente : descripcion;
             boolean exito = movimientosDAO.insertarMovimiento(
                 item.getIdProducto(),
                 new java.sql.Date(System.currentTimeMillis()),
                 new java.sql.Time(System.currentTimeMillis()),
-                "C", // Compra = ingreso
+                "V", // Venta = salida
                 item.getCantidad(),
                 dsc
             );
         }
         
         dispose(); // cierra el diálogo
-        JOptionPane.showMessageDialog(this, "✅ Compra registrada con éxito.");
+        JOptionPane.showMessageDialog(this, "✅ Venta registrada con éxito.");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -381,7 +381,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         }
         
         // 2. Crear y mostrar el diálogo
-        ListaProductos dialog = new ListaProductos((Frame) window, true);
+        ListaProductos_vta dialog = new ListaProductos_vta((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
         /*
@@ -392,10 +392,10 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         if(dialog.getIdProducto() != null) {
             idProducto = dialog.getIdProducto();
             nombreProducto = dialog.getNombreProducto();
-            Double precioCompra = dialog.getPrecio_compra();
-
+            Double precioVenta = dialog.getPrecio_venta();
+            
             txtProducto.setText(nombreProducto);
-            txtPrecio.setText(precioCompra.toString());
+            txtPrecio.setText(precioVenta.toString());
             txtCantidad.requestFocus(); // Establece el foco en el campo cantidad
         }
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
@@ -415,7 +415,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         }
         
         // Crear ítem
-        CompraItem item = new CompraItem(idProducto, nombreProducto, cantidad, precio);
+        VentaItem item = new VentaItem(idProducto, nombreProducto, cantidad, precio);
         
         // Añadir a la lista
         items.add(item);
@@ -444,18 +444,18 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     private void txtNitKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNitKeyReleased
         Integer nit = parsearNit(txtNit.getText());
         
-        String nombreProveedor = proveedorDAO.obtenerNombreProveedorPorNit(nit);
-        if(nombreProveedor != null) {
-            txtProveedor.setText(nombreProveedor);
+        String nombreCliente = clienteDAO.obtenerNombreClientePorNit(nit);
+        if(nombreCliente != null) {
+            txtCliente.setText(nombreCliente);
         } else {
-            txtProveedor.setText("");
+            txtCliente.setText("");
         }
     }//GEN-LAST:event_txtNitKeyReleased
     
     // PASO 5: Método para calcular total (opcional)
     private void calcularTotal() {
         Double total = items.stream()
-                            .mapToDouble(CompraItem::getSubTotal)
+                            .mapToDouble(VentaItem::getSubTotal)
                             .sum();
         
     }
@@ -477,14 +477,26 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CompraForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CompraForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CompraForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CompraForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -493,7 +505,7 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CompraForm dialog = new CompraForm(new javax.swing.JFrame(), true);
+                VentaForm dialog = new VentaForm(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -524,9 +536,9 @@ public class CompraForm extends javax.swing.JDialog { // Variables de instancia
     private javax.swing.JTable jtContenido;
     private javax.swing.JTextArea taDescripcion;
     private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtNit;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtProducto;
-    private javax.swing.JTextField txtProveedor;
     // End of variables declaration//GEN-END:variables
 }

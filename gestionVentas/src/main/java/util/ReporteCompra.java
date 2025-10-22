@@ -1,6 +1,6 @@
 package util;
 
-import Compras.detalle.CompraItem;
+import Compras.Item.CompraItem;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;

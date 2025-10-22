@@ -1,4 +1,4 @@
-package Compras;
+package Ventas;
 
 import Compras.Item.CompraItem;
 import java.awt.Desktop;
@@ -12,14 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import util.ReporteCompra;
 
-public class Compra_men extends javax.swing.JPanel {
-    private CompraDAO compraDAO = new CompraDAO();
+public class Venta_men extends javax.swing.JPanel {
+    private VentaDAO ventaDAO = new VentaDAO();
     private CompraItem compraItem = new CompraItem();
     
     /**
      * Creates new form CategoriaForm
      */
-    public Compra_men() {
+    public Venta_men() {
         initComponents();
         
         // Cargar datos a la tabla del formulario
@@ -30,8 +30,8 @@ public class Compra_men extends javax.swing.JPanel {
         DefaultTableModel modelo = (DefaultTableModel) jtContenido.getModel();
         modelo.setRowCount(0);
         
-        for (Compra c : compraDAO.listar()) {
-            modelo.addRow(new Object[]{c.getId(), c.getNit(), c.getProveedor(), c.getTotal(), c.getFecha()});
+        for (Venta c : ventaDAO.listar()) {
+            modelo.addRow(new Object[]{c.getId(), c.getNit(), c.getCliente(), c.getTotal(), c.getFecha()});
         }
         ajustarAnchoColumnas();
     }
@@ -178,14 +178,14 @@ public class Compra_men extends javax.swing.JPanel {
         }
         
         // 2. Crear y mostrar el diálogo
-        CompraForm dialog = new CompraForm((Frame) window, true);
+        VentaForm dialog = new VentaForm((Frame) window, true);
         dialog.setVisible(true); // bloquea hasta que se cierre
         
         if(dialog.idproducto_recuperar != null) {
-            // Recuperar el ID de la última compra
-            Integer idCompra = dialog.idproducto_recuperar;
-            // System.out.println("ID compra recuperado: " + idCompra);
-            imprimirCompra(idCompra);
+            // Recuperar el ID de la última venta
+            Integer idVenta = dialog.idproducto_recuperar;
+            
+            //imprimirCompra(idVenta);
             
             // Cargar datos a la tabla del formulario
             cargarDatos();
@@ -214,7 +214,7 @@ public class Compra_men extends javax.swing.JPanel {
         }
         
         // 4. Abrir el diálogo en modo edición
-        var dialog = new CompraForm((Frame) window, true, id, nit, proveedor, total);
+        var dialog = new VentaForm((Frame) window, true, id, nit, proveedor, total);
         dialog.setVisible(true); // bloquea hasta que se cierre
 
 //        // 5. Si se guardó, actualizar en BD y en tabla
@@ -223,7 +223,7 @@ public class Compra_men extends javax.swing.JPanel {
 //            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
 //            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
 //            
-//            if (compraDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
+//            if (ventaDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
 //                cargarDatos(); // refresca el JTable
 //                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
 //            } else {
@@ -243,21 +243,21 @@ public class Compra_men extends javax.swing.JPanel {
             return;
         }
         
-        Integer idCompra = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
-        imprimirCompra(idCompra);
+        Integer idVenta = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
+        imprimirCompra(idVenta);
     }//GEN-LAST:event_btnImprimirActionPerformed
     
-    private void imprimirCompra(Integer idCompra) {
+    private void imprimirCompra(Integer idVenta) {
         // 1. Obtener la cabecera de la compra
-        Compra compra = compraDAO.obtenerCompraPorId(idCompra);
+        Venta compra = ventaDAO.obtenerVentaPorId(idVenta);
         
         if (compra == null) {
-            JOptionPane.showMessageDialog(this, "❌ No se encontró la compra con ID: " + idCompra);
+            JOptionPane.showMessageDialog(this, "❌ No se encontró la compra con ID: " + idVenta);
             return;
         }
         
         // 2. Obtener los ítems
-        List<CompraItem> items = compraItem.compraItem(idCompra);
+        List<CompraItem> items = compraItem.compraItem(idVenta);
         
         if (items.isEmpty()) {
             JOptionPane.showMessageDialog(this, "❌ No se encontraron ítems para esta compra.");
@@ -268,7 +268,7 @@ public class Compra_men extends javax.swing.JPanel {
         String archivoPDF = ReporteCompra.generarPDFCompra(
             compra.getId(),
             compra.getNit(),
-            compra.getProveedor(),
+            compra.getCliente(),
             compra.getFecha(), // java.sql.Date → se convierte automáticamente
             compra.getTotal(),
             items

@@ -1,36 +1,35 @@
-package Proveedor;
+package Proveedor_Cliente;
 
 import BaseDatos.ConexionMySQL;
-import Compras.Compra;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProveedorDAO {
+public class ClienteDAO {
     private ConexionMySQL conexion;
     
-    public ProveedorDAO() {
+    public ClienteDAO() {
         this.conexion = new ConexionMySQL();
     }
     
     /**
-     * Guarda o actualiza un proveedor por NIT
+     * Guarda o actualiza un cliente por NIT
      * @param nit
      * @param nombre
      * @return true si se guardó/actualizó correctamente
      */
-    public boolean guardarProveedor(Integer nit, String nombre) {
+    public boolean guardarCliente(Integer nit, String nombre) {
         // Primero intentamos actualizar
-        if (actualizarProveedor(nit, nombre)) {
+        if (actualizarCliente(nit, nombre)) {
             return true;
         }
         // Si no existe, insertamos
-        return insertarProveedor(nit, nombre);
+        return insertarCliente(nit, nombre);
     }
     
-    private boolean actualizarProveedor(Integer nit, String nombre) {
-        String sql = "UPDATE proveedor SET nombre = ? WHERE nit = ?";
+    private boolean actualizarCliente(Integer nit, String nombre) {
+        String sql = "UPDATE cliente SET nombre = ? WHERE nit = ?";
         try (Connection conn = conexion.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nombre);
@@ -42,13 +41,13 @@ public class ProveedorDAO {
         }
     }
     
-    private boolean insertarProveedor(Integer nit, String nombre) {
-        String nombreProveedor = obtenerNombreProveedorPorNit(nit);
-        if(nombreProveedor != null) {
+    private boolean insertarCliente(Integer nit, String nombre) {
+        String nombreCliente = obtenerNombreClientePorNit(nit);
+        if(nombreCliente != null) {
             return false;
         }
         
-        String sql = "INSERT INTO proveedor (nit, nombre) VALUES (?, ?)";
+        String sql = "INSERT INTO cliente (nit, nombre) VALUES (?, ?)";
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, nit);
@@ -57,7 +56,7 @@ public class ProveedorDAO {
         } catch (SQLException e) {
             // Si falla por duplicado (en caso de concurrencia), intentamos actualizar
             if (e.getErrorCode() == 1062) { // Código de error de MySQL para duplicado
-                return actualizarProveedor(nit, nombre);
+                return actualizarCliente(nit, nombre);
             }
             e.printStackTrace();
             return false;
@@ -65,17 +64,17 @@ public class ProveedorDAO {
     }
     
     /**
-    * Obtiene el nombre del proveedor dado su NIT.
+    * Obtiene el nombre del cliente dado su NIT.
     * 
-    * @param nit NIT del proveedor a buscar
-    * @return Nombre del proveedor si existe, null si no se encuentra
+    * @param nit NIT del cliente a buscar
+    * @return Nombre del cliente si existe, null si no se encuentra
     */
-    public String obtenerNombreProveedorPorNit(Integer nit) {
+    public String obtenerNombreClientePorNit(Integer nit) {
         if (nit == null) {
            return null;
         }
         
-        String sql = "SELECT nombre FROM proveedor WHERE nit = ?";
+        String sql = "SELECT nombre FROM cliente WHERE nit = ?";
         
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql)) {

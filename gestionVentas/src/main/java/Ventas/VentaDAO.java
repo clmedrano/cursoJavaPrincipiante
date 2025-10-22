@@ -1,42 +1,42 @@
-package Compras;
+package Ventas;
 
 import BaseDatos.ConexionMySQL;
-import Proveedor_Cliente.ProveedorDAO;
+import Proveedor_Cliente.ClienteDAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 // DAO = Data Access Object → patrón común para operaciones de base de datos
-public class CompraDAO {
+public class VentaDAO {
     private ConexionMySQL conexion;
-    private ProveedorDAO proveedorDAO = new ProveedorDAO();
+    private ClienteDAO clienteDAO = new ClienteDAO();
     
-    public CompraDAO() {
+    public VentaDAO() {
         this.conexion = new ConexionMySQL();
     }
     
     /**
      * Insertar una nueva categoría
      * @param nit
-     * @param proveedor
+     * @param cliente
      * @param fecha
      * @param total
      * @param descripcion
      * @return 
      */
-    public Integer insertarCabecera(Integer nit, String proveedor, Date fecha, Double total, String descripcion) {
-        String sql = "INSERT INTO compra (nit, proveedor, fecha, total, descripcion) VALUES (?, ?, ?, ?, ?)";
+    public Integer insertarCabecera(Integer nit, String cliente, Date fecha, Double total, String descripcion) {
+        String sql = "INSERT INTO venta (nit, cliente, fecha, total, descripcion) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             ps.setInt(1, nit);
-            ps.setString(2, proveedor);
+            ps.setString(2, cliente);
             ps.setDate(3, new java.sql.Date(fecha.getTime()));
             ps.setDouble(4, total);
             ps.setString(5, descripcion);
             ps.executeUpdate();
             
-            proveedorDAO.guardarProveedor(nit, proveedor);
+            clienteDAO.guardarCliente(nit, cliente);
             
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -51,23 +51,23 @@ public class CompraDAO {
     
     /**
      * Insertar una nueva categoría
-     * @param idCompra
+     * @param idVenta
      * @param idProducto
      * @param cantidad
      * @param precio
      * @param subTotal
      * @return 
      */
-    public boolean insertarItem(Integer idCompra, Integer idProducto, Integer cantidad, Double precio, Double subTotal) {
+    public boolean insertarItem(Integer idVenta, Integer idProducto, Integer cantidad, Double precio, Double subTotal) {
         String sql = """
-            INSERT INTO compra_item (idcompra, idproducto, cantidad, precio, subtotal) 
+            INSERT INTO venta_item (idventa, idproducto, cantidad, precio, subtotal) 
             VALUES (?, ?, ?, ?, ?)
             """;
         
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setInt(1, idCompra);
+            ps.setInt(1, idVenta);
             ps.setInt(2, idProducto);
             ps.setInt(3, cantidad);
             ps.setDouble(4, precio);
@@ -85,32 +85,32 @@ public class CompraDAO {
      * Obtener todas las compras
      * @return 
      */
-    public List<Compra> listar() {
-        List<Compra> compra = new ArrayList<>();
+    public List<Venta> listar() {
+        List<Venta> venta = new ArrayList<>();
         String sql = """
-                     SELECT c.id, c.nit, c.proveedor, c.fecha, c.total
-                     FROM compra c""";
+                     SELECT c.id, c.nit, c.cliente, c.fecha, c.total
+                     FROM venta c""";
         
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                Compra c = new Compra();
+                Venta c = new Venta();
                 c.setId(rs.getInt("id"));
                 c.setNit(rs.getInt("nit"));
-                c.setProveedor(rs.getString("proveedor"));
+                c.setCliente(rs.getString("cliente"));
                 c.setFecha(rs.getDate("fecha"));
                 c.setTotal(rs.getDouble("total"));
                 
-                compra.add(c);
+                venta.add(c);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return compra;
+        return venta;
     }
     
 //    /**
@@ -157,27 +157,27 @@ public class CompraDAO {
 //        }
 //    }
     
-    public Compra obtenerCompraPorId(Integer idCompra) {
+    public Venta obtenerVentaPorId(Integer idVenta) {
         String sql = """
-            SELECT id, nit, proveedor, fecha, total 
-            FROM compra 
+            SELECT id, nit, cliente, fecha, total 
+            FROM venta 
             WHERE id = ?
             """;
 
         try (Connection conn = conexion.getConexion();
             PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setInt(1, idCompra);
+            ps.setInt(1, idVenta);
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Compra compra = new Compra();
-                    compra.setId(rs.getInt("id"));
-                    compra.setNit(rs.getInt("nit"));
-                    compra.setProveedor(rs.getString("proveedor"));
-                    compra.setFecha(rs.getDate("fecha"));
-                    compra.setTotal(rs.getDouble("total"));
-                    return compra;
+                    Venta venta = new Venta();
+                    venta.setId(rs.getInt("id"));
+                    venta.setNit(rs.getInt("nit"));
+                    venta.setCliente(rs.getString("cliente"));
+                    venta.setFecha(rs.getDate("fecha"));
+                    venta.setTotal(rs.getDouble("total"));
+                    return venta;
                 }
             }
         } catch (SQLException e) {

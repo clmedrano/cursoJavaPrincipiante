@@ -1,20 +1,20 @@
-package Compras.detalle;
+package Ventas.Item;
 
 import Producto.Producto;
 import Producto.ProductoDAO;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class ListaProductos extends javax.swing.JDialog {
+public class ListaProductos_vta extends javax.swing.JDialog {
     private ProductoDAO productoDAO = new ProductoDAO();
     private Integer idProducto_seleccionado;
     private String nombreProducto_seleccionado;
-    private Double precio_compra_seleccionado;
+    private Double precio_venta_seleccionado;
     
     /**
      * Creates new form ListaProductos
      */
-    public ListaProductos(java.awt.Frame parent, boolean modal) {
+    public ListaProductos_vta(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         
@@ -32,7 +32,7 @@ public class ListaProductos extends javax.swing.JDialog {
         modelo.setRowCount(0);
         
         for (Producto c : productoDAO.listar(query)) { // ← modelo.Categoria
-            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioCompra()});
+            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getPrecioVenta()});
         }
         ajustarAnchoColumnas();
     }
@@ -55,11 +55,11 @@ public class ListaProductos extends javax.swing.JDialog {
             // Obtener datos de la fila seleccionada
             Integer id = (Integer) jtContenido.getValueAt(fila, 0);
             String nombre = (String) jtContenido.getValueAt(fila, 1);
-            Double precioCompra = (Double) jtContenido.getValueAt(fila, 2);
+            Double precioVenta = (Double) jtContenido.getValueAt(fila, 2);
             
             idProducto_seleccionado = id;
             nombreProducto_seleccionado = nombre;
-            precio_compra_seleccionado = precioCompra;
+            precio_venta_seleccionado = precioVenta;
         }
     }
     public Integer getIdProducto() {
@@ -68,8 +68,8 @@ public class ListaProductos extends javax.swing.JDialog {
     public String getNombreProducto() {
         return nombreProducto_seleccionado;
     }
-    public Double getPrecio_compra() {
-        return precio_compra_seleccionado;
+    public Double getPrecio_venta() {
+        return precio_venta_seleccionado;
     }
     
     /**
@@ -243,20 +243,21 @@ public class ListaProductos extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaProductos_vta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaProductos_vta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaProductos_vta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListaProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaProductos_vta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ListaProductos dialog = new ListaProductos(new javax.swing.JFrame(), true);
+                ListaProductos_vta dialog = new ListaProductos_vta(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
