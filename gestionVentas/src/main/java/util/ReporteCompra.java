@@ -1,6 +1,7 @@
 package util;
 
 import Compras.Item.CompraItem;
+import Ventas.Item.VentaItem;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -13,14 +14,7 @@ import java.util.List;
 
 public class ReporteCompra {
     
-    public static String generarPDFCompra(
-            Integer idCompra,
-            Integer nit,
-            String proveedor,
-            java.util.Date fecha,
-            Double total,
-            List<CompraItem> items) {
-        
+    public static String generarPDFCompra(Integer idCompra, Integer nit, String proveedor, java.util.Date fecha, Double total, List<CompraItem> items) {
         // ✅ Ruta completa del archivo
         String nombreArchivo = "compra_" + idCompra + ".pdf";
         
@@ -81,6 +75,93 @@ public class ReporteCompra {
             tablaItems.addHeaderCell("SubTotal");
             
             for (CompraItem item : items) {
+//                tablaItems.addCell(item.getIdProducto().toString());
+                tablaItems.addCell(item.getNombreProducto());
+                tablaItems.addCell(item.getCantidad().toString());
+                tablaItems.addCell(String.format("%.2f", item.getPrecio()));
+                tablaItems.addCell(String.format("%.2f", item.getSubTotal()));
+            }
+            
+            document.add(tablaItems);
+            document.add(new Paragraph(" "));
+            
+            // Total final
+            Paragraph totalFinal = new Paragraph("TOTAL (Bs): " + String.format("%.2f", total))
+                    .setTextAlignment(TextAlignment.RIGHT)
+                    .setBold()
+                    .setFontSize(14);
+            document.add(totalFinal);
+            
+            document.close();
+            return rutaCompleta;
+            
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static String generarPDFVenta(Integer idVenta, Integer nit, String cliente, java.util.Date fecha, Double total, List<VentaItem> items) {
+        // ✅ Ruta completa del archivo
+        String nombreArchivo = "venta_" + idVenta + ".pdf";
+        
+        // C:\Users\hp\Documentos\Reportes_UBI\compra_1.pdf
+        // C:/Users/hp/Documentos/Reportes_UBI\compra_1.pdf
+        String carpetaReportes = System.getProperty("user.home") + File.separator + "Documentos" + File.separator + "Reportes_UBI";
+        File carpeta = new File(carpetaReportes);
+        if (!carpeta.exists()) {
+            carpeta.mkdirs();
+        }
+        String rutaCompleta = carpetaReportes + File.separator + nombreArchivo;
+        System.out.println("Ruta completa del PDF: " + rutaCompleta);
+        
+        try {
+            PdfWriter writer = new PdfWriter(rutaCompleta);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            
+            // Título
+            Paragraph titulo = new Paragraph("VENTA Nº " + idVenta)
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFontSize(20)
+                    .setBold();
+            document.add(titulo);
+            document.add(new Paragraph(" "));
+            
+            // Datos de la cabecera
+            Table cabecera = new Table(3);
+//            cabecera.addCell("NIT:");
+//            cabecera.addCell(nit.toString());
+//            cabecera.addCell("Cliente:");
+//            cabecera.addCell(cliente);
+//            cabecera.addCell("Fecha:");
+//            cabecera.addCell(fecha.toString());
+            
+            // Añadir celdas SIN bordes
+            cabecera.addCell(crearCeldaSinBorde("NIT"));
+            cabecera.addCell(crearCeldaSinBorde(":"));
+            cabecera.addCell(crearCeldaSinBorde(nit.toString()));
+            
+            cabecera.addCell(crearCeldaSinBorde("Cliente"));
+            cabecera.addCell(crearCeldaSinBorde(":"));
+            cabecera.addCell(crearCeldaSinBorde(cliente));
+            
+            cabecera.addCell(crearCeldaSinBorde("Fecha"));
+            cabecera.addCell(crearCeldaSinBorde(":"));
+            cabecera.addCell(crearCeldaSinBorde(fecha.toString()));
+            
+            document.add(cabecera);
+            document.add(new Paragraph(" "));
+            
+            // Tabla de ítems
+            Table tablaItems = new Table(4);
+//            tablaItems.addHeaderCell("ID");
+            tablaItems.addHeaderCell("Producto");
+            tablaItems.addHeaderCell("Cantidad");
+            tablaItems.addHeaderCell("Precio");
+            tablaItems.addHeaderCell("SubTotal");
+            
+            for (VentaItem item : items) {
 //                tablaItems.addCell(item.getIdProducto().toString());
                 tablaItems.addCell(item.getNombreProducto());
                 tablaItems.addCell(item.getCantidad().toString());

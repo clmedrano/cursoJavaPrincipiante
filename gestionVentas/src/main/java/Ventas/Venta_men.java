@@ -1,6 +1,6 @@
 package Ventas;
 
-import Compras.Item.CompraItem;
+import Ventas.Item.VentaItem;
 import java.awt.Desktop;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -14,7 +14,7 @@ import util.ReporteCompra;
 
 public class Venta_men extends javax.swing.JPanel {
     private VentaDAO ventaDAO = new VentaDAO();
-    private CompraItem compraItem = new CompraItem();
+    private VentaItem ventaItem = new VentaItem();
     
     /**
      * Creates new form CategoriaForm
@@ -67,7 +67,6 @@ public class Venta_men extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtContenido = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -106,13 +105,6 @@ public class Venta_men extends javax.swing.JPanel {
             }
         });
 
-        btnEditar.setText("Editar");
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarActionPerformed(evt);
-            }
-        });
-
         btnImprimir.setText("Imprimir");
         btnImprimir.setToolTipText("Imprimir detalle de la compra");
         btnImprimir.addActionListener(new java.awt.event.ActionListener() {
@@ -132,8 +124,6 @@ public class Venta_men extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnImprimir)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -144,7 +134,6 @@ public class Venta_men extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevo)
-                    .addComponent(btnEditar)
                     .addComponent(btnImprimir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,55 +174,12 @@ public class Venta_men extends javax.swing.JPanel {
             // Recuperar el ID de la última venta
             Integer idVenta = dialog.idproducto_recuperar;
             
-            //imprimirCompra(idVenta);
+            imprimirVenta(idVenta);
             
             // Cargar datos a la tabla del formulario
             cargarDatos();
         }
     }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // 1. Verificar fila seleccionada
-        int filaSeleccionada = jtContenido.getSelectedRow();
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona un Producto para editar.");
-            return;
-        }
-        
-        // 2. Obtener datos
-        Integer id = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
-        Integer nit = (Integer) jtContenido.getValueAt(filaSeleccionada, 1);
-        String proveedor = (String) jtContenido.getValueAt(filaSeleccionada, 2);
-        Double total = (Double) jtContenido.getValueAt(filaSeleccionada, 3);
-                
-        // 3. Obtener ventana padre
-        Window window = SwingUtilities.getWindowAncestor(this);
-        if (!(window instanceof Frame)) {
-            JOptionPane.showMessageDialog(this, "No se puede abrir el diálogo.");
-            return;
-        }
-        
-        // 4. Abrir el diálogo en modo edición
-        var dialog = new VentaForm((Frame) window, true, id, nit, proveedor, total);
-        dialog.setVisible(true); // bloquea hasta que se cierre
-
-//        // 5. Si se guardó, actualizar en BD y en tabla
-//        if (dialog.isGuardado()) {
-//            String nuevoNombre = dialog.getNombreIngresado();
-//            Integer nuevoIdcategoria = dialog.getIdCategoriaIngresado();
-//            Double nuevoPrecioVta = dialog.getPrecioVtaIngresado();
-//            
-//            if (ventaDAO.actualizar(id, nuevoNombre, nuevoIdcategoria, nuevoPrecioVta)) {
-//                cargarDatos(); // refresca el JTable
-//                JOptionPane.showMessageDialog(this, "✅ Producto actualizado con éxito.");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "❌ Error al actualizar en la base de datos.");
-//            }
-//            
-//            // Opcional: actualizar solo esa celda en la tabla
-//            jtContenido.setValueAt(nuevoNombre, filaSeleccionada, 1);
-//        }
-    }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // 1. Verificar fila seleccionada
@@ -244,20 +190,20 @@ public class Venta_men extends javax.swing.JPanel {
         }
         
         Integer idVenta = (Integer) jtContenido.getValueAt(filaSeleccionada, 0);
-        imprimirCompra(idVenta);
+        imprimirVenta(idVenta);
     }//GEN-LAST:event_btnImprimirActionPerformed
     
-    private void imprimirCompra(Integer idVenta) {
+    private void imprimirVenta(Integer idVenta) {
         // 1. Obtener la cabecera de la compra
-        Venta compra = ventaDAO.obtenerVentaPorId(idVenta);
+        Venta venta = ventaDAO.obtenerVentaPorId(idVenta);
         
-        if (compra == null) {
+        if (venta == null) {
             JOptionPane.showMessageDialog(this, "❌ No se encontró la compra con ID: " + idVenta);
             return;
         }
         
         // 2. Obtener los ítems
-        List<CompraItem> items = compraItem.compraItem(idVenta);
+        List<VentaItem> items = ventaItem.ventaItem(idVenta);
         
         if (items.isEmpty()) {
             JOptionPane.showMessageDialog(this, "❌ No se encontraron ítems para esta compra.");
@@ -265,12 +211,12 @@ public class Venta_men extends javax.swing.JPanel {
         }
         
         // 3. Generar PDF
-        String archivoPDF = ReporteCompra.generarPDFCompra(
-            compra.getId(),
-            compra.getNit(),
-            compra.getCliente(),
-            compra.getFecha(), // java.sql.Date → se convierte automáticamente
-            compra.getTotal(),
+        String archivoPDF = ReporteCompra.generarPDFVenta(
+            venta.getId(),
+            venta.getNit(),
+            venta.getCliente(),
+            venta.getFecha(), // java.sql.Date → se convierte automáticamente
+            venta.getTotal(),
             items
         );
         
@@ -288,7 +234,6 @@ public class Venta_men extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;

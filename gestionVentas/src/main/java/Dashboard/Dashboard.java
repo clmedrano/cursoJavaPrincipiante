@@ -141,7 +141,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         btnMovimientos.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         btnMovimientos.setForeground(new java.awt.Color(0, 102, 255));
-        btnMovimientos.setText("Imprimir Movimientos");
+        btnMovimientos.setText("Reporte");
         btnMovimientos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMovimientosActionPerformed(evt);
@@ -236,6 +236,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void btnMovimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovimientosActionPerformed
         lblTexto.setText("Aquí debe imprimir los movimientos en almacén de un PRODUCTO (Falta...)");
+        
     }//GEN-LAST:event_btnMovimientosActionPerformed
 
     /**

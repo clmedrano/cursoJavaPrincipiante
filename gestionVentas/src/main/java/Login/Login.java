@@ -1,5 +1,6 @@
 package Login;
 
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import util.VistaUtil;
 
@@ -75,6 +76,11 @@ public class Login extends javax.swing.JDialog {
                 txtPasswordFocusGained(evt);
             }
         });
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpLoginLayout = new javax.swing.GroupLayout(jpLogin);
         jpLogin.setLayout(jpLoginLayout);
@@ -134,6 +140,29 @@ public class Login extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        iniciarSesion();
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
+
+    private void txtPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusGained
+        // Seleccionar todo el texto cuando gana foco
+        txtPassword.selectAll();
+    }//GEN-LAST:event_txtPasswordFocusGained
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            iniciarSesion();
+        }
+    }//GEN-LAST:event_txtPasswordKeyPressed
+    
+    // Getters para el resultado
+    public boolean isLoginExitoso() {
+        return loginExitoso;
+    }
+    public String getUsuarioAutenticado() {
+        return usuarioAutenticado;
+    }
+    
+    private void iniciarSesion() {
         String usuario = txtUsuario.getText().trim();
         String password = new String(txtPassword.getPassword());
         
@@ -161,19 +190,6 @@ public class Login extends javax.swing.JDialog {
             //txtPassword.setText("");
             txtUsuario.requestFocus();
         }
-    }//GEN-LAST:event_btnIniciarSesionActionPerformed
-
-    private void txtPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusGained
-        // Seleccionar todo el texto cuando gana foco
-        txtPassword.selectAll();
-    }//GEN-LAST:event_txtPasswordFocusGained
-    
-    // Getters para el resultado
-    public boolean isLoginExitoso() {
-        return loginExitoso;
-    }
-    public String getUsuarioAutenticado() {
-        return usuarioAutenticado;
     }
     
     /**
