@@ -17,7 +17,7 @@ public class Principal {
                 "¡Bienvenido, " + login.getUsuarioAutenticado() + "!");
             
             // ✅ Abrir Dashboard como JFrame (ventana principal)
-            Dashboard dashboard = new Dashboard(login.getUsuarioAutenticado());
+            Dashboard dashboard = new Dashboard(login.getUsuarioAutenticado(), 1);
             dashboard.setVisible(true);
             
             // El login se cierra automáticamente, y el dashboard toma el control

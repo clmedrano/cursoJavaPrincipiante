@@ -1,32 +1,33 @@
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\CategoriaDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Proveedor_Cliente\ClienteDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\UsuarioDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Inicio\Principal.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\BaseDatos\ConexionMySQL.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Item\VentaItem.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\VentaDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\CompraDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Venta_men.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Compra.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Compra_men.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Proveedor_Cliente\ProveedorDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Item\ListaProductos.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Item\CompraItem.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\VentaForm.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoForm.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\CompraForm.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Movimientos_Items\MovimientosDAO.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Dashboard\Dashboard.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\util\VistaUtil.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\CategoriaForm.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto_men.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\util\ReporteCompra.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria_men.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Usuario.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\util\PruebaIText.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Item\ListaProductos_vta.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Venta.java
-G:\Java\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Login.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\CategoriaForm.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Usuario.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Compra_men.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Venta.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Proveedor_Cliente\ProveedorDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\BaseDatos\ConexionMySQL.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoForm.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\util\VistaUtil.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Dashboard\Dashboard.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\util\PruebaIText.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\CategoriaDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\VentaDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Item\ListaProductos_vta.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Movimientos_Items\MovimientosDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\CompraDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Dashboard\ReporteForm.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Item\VentaItem.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Item\CompraItem.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Item\ListaProductos.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Proveedor_Cliente\ClienteDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Categoria\Categoria_men.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\VentaForm.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\Login.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Inicio\Principal.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\Compra.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\ProductoDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Producto\Producto_men.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Ventas\Venta_men.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Login\UsuarioDAO.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\util\ReporteCompra.java
+D:\UBI Proyecto 2025\cursoJavaPrincipiante\gestionVentas\src\main\java\Compras\CompraForm.java
