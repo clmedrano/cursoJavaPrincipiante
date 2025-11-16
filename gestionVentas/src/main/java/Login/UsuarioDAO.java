@@ -24,10 +24,10 @@ public class UsuarioDAO {
             return null;
         }
         
-        String sql = "SELECT id, name, password FROM usuario WHERE name = ? AND password = ?";
+        String sql = "SELECT id, name, password, rol FROM usuario WHERE name = ? AND password = ?";
         
         try (Connection conn = conexion.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+            PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, name.trim());
             ps.setString(2, password); // Ver nota de seguridad abajo
@@ -38,6 +38,7 @@ public class UsuarioDAO {
                     u.setId(rs.getInt("id"));
                     u.setName(rs.getString("name"));
                     u.setPassword(rs.getString("password"));
+                    u.setRol(rs.getInt("rol"));
                     return u;
                 }
             }

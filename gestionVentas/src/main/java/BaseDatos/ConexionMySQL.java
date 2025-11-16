@@ -8,8 +8,8 @@ public class ConexionMySQL {
     // Parámetros de conexión
     private static final String URL = "jdbc:mysql://localhost:3306/gestion_ventas";
     private static final String USUARIO = "root";
-    private static final String CONTRASENA = "root2025UBI_sucre";
-    //private static final String CONTRASENA = "";
+//    private static final String CONTRASENA = "root2025UBI_sucre";
+    private static final String CONTRASENA = "";
     
     /**
      * Método para obtener la conexión a la base de datos

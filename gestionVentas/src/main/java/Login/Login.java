@@ -8,6 +8,7 @@ public class Login extends javax.swing.JDialog {
     private VistaUtil vistaUtil = new VistaUtil();
     private boolean loginExitoso = false;
     private String usuarioAutenticado = null;
+    private Integer rol;
     
     /**
      * Creates new form Login
@@ -161,6 +162,9 @@ public class Login extends javax.swing.JDialog {
     public String getUsuarioAutenticado() {
         return usuarioAutenticado;
     }
+    public Integer getRol() {
+        return rol;
+    }
     
     private void iniciarSesion() {
         String usuario = txtUsuario.getText().trim();
@@ -184,6 +188,7 @@ public class Login extends javax.swing.JDialog {
         if (usuarioAutenticado != null) {
             this.loginExitoso = true;
             this.usuarioAutenticado = usuarioAutenticado.getName();
+            this.rol = usuarioAutenticado.getRol();
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);

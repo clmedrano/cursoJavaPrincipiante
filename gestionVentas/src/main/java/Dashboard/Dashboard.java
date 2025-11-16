@@ -19,6 +19,9 @@ public class Dashboard extends javax.swing.JFrame {
         // Posicionar en el centro de lapantalla
         this.setLocationRelativeTo(null);
         setTitle("Menú principal");
+        
+        lblUsuario.setText("");
+        lblAdmin.setText("");
     }
     public Dashboard(String usuario, Integer rol) {
         initComponents();
@@ -27,11 +30,16 @@ public class Dashboard extends javax.swing.JFrame {
 //        setSize(800, 600);
         setLocationRelativeTo(null);
         
+        String rolName = "Administrador";
         // Vendedor: oculta controles
         if(rol == 2) {
             btnCategorias.setVisible(false);
             btnProductos.setVisible(false);
+            rolName = "Vendedor";
         }
+        
+        lblUsuario.setText(usuario);
+        lblAdmin.setText(rolName);
     }
 
     /**
@@ -54,8 +62,8 @@ public class Dashboard extends javax.swing.JFrame {
         btnProductos = new javax.swing.JButton();
         btnVentas = new javax.swing.JButton();
         btnMovimientos = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblAdmin = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,12 +164,12 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Administrador");
+        lblAdmin.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblAdmin.setForeground(new java.awt.Color(255, 255, 255));
+        lblAdmin.setText("Administrador");
 
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Grover");
+        lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsuario.setText("Grover");
 
         javax.swing.GroupLayout jpMenuLayout = new javax.swing.GroupLayout(jpMenu);
         jpMenu.setLayout(jpMenuLayout);
@@ -175,8 +183,8 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jpMenuLayout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addGroup(jpMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpMenuLayout.setVerticalGroup(
@@ -193,9 +201,9 @@ public class Dashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMovimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addComponent(jLabel3)
+                .addComponent(lblUsuario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(lblAdmin)
                 .addGap(46, 46, 46))
         );
 
@@ -308,13 +316,13 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnMovimientos;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnVentas;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jpCabecera;
     private javax.swing.JPanel jpContenedor;
     private javax.swing.JPanel jpMenu;
     private javax.swing.JPanel jpTitulo;
+    private javax.swing.JLabel lblAdmin;
     private javax.swing.JLabel lblTexto;
+    private javax.swing.JLabel lblUsuario;
     // End of variables declaration//GEN-END:variables
 }

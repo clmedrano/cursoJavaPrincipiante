@@ -4,6 +4,7 @@ public class Usuario {
     private Integer id;
     private String name;
     private String password;
+    private Integer rol;
     
     // Constructores
     public Usuario() {}
@@ -22,4 +23,7 @@ public class Usuario {
     
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    
+    public Integer getRol() { return rol; }
+    public void setRol(Integer rol) { this.rol = rol; }
 }

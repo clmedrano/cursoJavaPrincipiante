@@ -1,12 +1,46 @@
 package Dashboard;
 
-public class ReporteMovimientos extends javax.swing.JPanel {
+import Compras.Compra;
+import Compras.Item.CompraItem;
+import Producto.Producto;
+import Producto.ProductoDAO;
+import java.awt.Desktop;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import util.ReporteCompra;
 
+public class ReporteMovimientos extends javax.swing.JPanel {
+    private Map<String, Integer> mapaArticulos = new HashMap<>();
+    
     /**
      * Creates new form ReporteMovimientos
      */
     public ReporteMovimientos() {
         initComponents();
+        
+        cargarArticulos();
+    }
+    
+    // Cargar productos al combobox
+    private void cargarArticulos() {
+        ProductoDAO dao = new ProductoDAO();
+        List<Producto> articulos = dao.listar("");
+        
+        // Limpiar
+        cbArticulos.removeAllItems();
+        mapaArticulos.clear();
+        
+        // Opción vacía
+        cbArticulos.addItem("-- Seleccione --");
+        mapaArticulos.put("-- Seleccione --", null);
+        
+        for (Producto c : articulos) {
+            cbArticulos.addItem(c.getNombre());              // Texto en el combo
+            mapaArticulos.put(c.getNombre(), c.getId()); // Asociar nombre -> id
+        }
     }
 
     /**
@@ -20,16 +54,21 @@ public class ReporteMovimientos extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        cbArticulos = new javax.swing.JComboBox<>();
+        btnImprimir = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setText("Producto");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbArticulos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton1.setText("Imprimir");
+        btnImprimir.setText("Imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -41,9 +80,9 @@ public class ReporteMovimientos extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 154, Short.MAX_VALUE))
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbArticulos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -52,9 +91,9 @@ public class ReporteMovimientos extends javax.swing.JPanel {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btnImprimir)
                 .addContainerGap(51, Short.MAX_VALUE))
         );
 
@@ -76,10 +115,51 @@ public class ReporteMovimientos extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        imprimirMoviimento(1);
+    }//GEN-LAST:event_btnImprimirActionPerformed
+    
+    private void imprimirMoviimento(Integer idproducto) {
+        
+//        // 1. Obtener la cabecera de la compra
+//        Compra compra = compraDAO.obtenerCompraPorId(idCompra);
+//        
+//        if (compra == null) {
+//            JOptionPane.showMessageDialog(this, "❌ No se encontró la compra con ID: " + idCompra);
+//            return;
+//        }
+        
+//        // 2. Obtener los ítems
+//        List<CompraItem> items = compraItem.compraItem(idCompra);
+//        
+//        if (items.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "❌ No se encontraron ítems para esta compra.");
+//            return;
+//        }
+        
+        // 3. Generar PDF
+//        String archivoPDF = ReporteCompra.generarPDFMovimiento(idproducto);
+        
+        // En tu formulario
+        ReporteCompra reporte = new ReporteCompra(); // Instancia la clase
+        String archivoPDF = reporte.generarPDFMovimiento(idproducto);
+        
+        if (archivoPDF == null) {
+            JOptionPane.showMessageDialog(this, "❌ Error al generar el PDF.");
+            return;
+        }
+        
+        // 4. Abrir el PDF
+        try {
+            Desktop.getDesktop().open(new File(archivoPDF));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "✅ PDF generado: " + archivoPDF);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnImprimir;
+    private javax.swing.JComboBox<String> cbArticulos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
