@@ -35,6 +35,7 @@ public class Dashboard extends javax.swing.JFrame {
         if(rol == 2) {
             btnCategorias.setVisible(false);
             btnProductos.setVisible(false);
+            btnCompras.setVisible(false);
             rolName = "Vendedor";
         }
         

@@ -22,6 +22,7 @@ public class Compra_men extends javax.swing.JPanel {
     public Compra_men() {
         initComponents();
         
+        btnEditar.setVisible(false);
         // Cargar datos a la tabla del formulario
         cargarDatos();
     }

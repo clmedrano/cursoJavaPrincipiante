@@ -31,7 +31,7 @@ public class UsuarioDAO {
             
             ps.setString(1, name.trim());
             ps.setString(2, password); // Ver nota de seguridad abajo
-            
+            //System.out.println(ps);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Usuario u = new Usuario();
